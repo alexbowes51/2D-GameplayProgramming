@@ -9,6 +9,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include "ScreenSize.h"
+#include <Thor/Resources.hpp>
 
 /// <summary>
 /// @author RP
@@ -82,6 +83,8 @@ protected:
 	sf::Font m_arialFont;
 	// main window
 	sf::RenderWindow m_window;
+	thor::ResourceHolder<sf::Texture, std::string> m_holder;
+	sf::Sprite m_tankSprite;
 
 #ifdef TEST_FPS
 	sf::Text x_updateFPS;					// text used to display updates per second.

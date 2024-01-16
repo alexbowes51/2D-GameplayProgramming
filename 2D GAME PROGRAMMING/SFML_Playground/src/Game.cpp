@@ -23,6 +23,14 @@ void Game::init()
 		std::cout << "Error loading font file";
 	}
 
+	m_holder.acquire("tankAtlas", thor::Resources::fromFile<sf::Texture>("resources/Images/SpriteIndex.png"));
+
+	sf::Texture& texture = m_holder["tankAtlas"];
+
+	m_tankSprite.setTexture(texture);
+
+	m_tankSprite.setPosition(100, 100);
+
 #ifdef TEST_FPS
 	x_updateFPS.setFont(m_arialFont);
 	x_updateFPS.setPosition(20, 300);
@@ -120,6 +128,7 @@ void Game::render()
 #ifdef TEST_FPS
 	m_window.draw(x_updateFPS);
 	m_window.draw(x_drawFPS);
+	m_window.draw(m_tankSprite);
 #endif
 	m_window.display();
 }
