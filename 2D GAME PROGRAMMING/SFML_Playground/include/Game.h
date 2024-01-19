@@ -85,6 +85,7 @@ protected:
 	sf::RenderWindow m_window;
 	thor::ResourceHolder<sf::Texture, std::string> m_holder;
 	sf::Sprite m_tankSprite;
+	sf::Sprite m_CanonSprite;
 
 #ifdef TEST_FPS
 	sf::Text x_updateFPS;					// text used to display updates per second.

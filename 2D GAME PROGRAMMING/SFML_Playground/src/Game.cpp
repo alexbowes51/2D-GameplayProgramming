@@ -27,10 +27,29 @@ void Game::init()
 
 	sf::Texture& texture = m_holder["tankAtlas"];
 
-	m_tankSprite.setTexture(texture);
+	//tank body
+   m_tankSprite.setTexture(texture);
+   m_tankSprite.setOrigin(0,0);
+   m_tankSprite.setPosition(300, 100);
 
-	m_tankSprite.setPosition(100, 100);
+	//tank rect
+	sf::IntRect m_tankRect(0, 0, 246, 114);
 
+	m_tankSprite.setTextureRect(m_tankRect);
+
+	//canon texture
+	sf::Texture& texture2 = m_holder["tankAtlas"];
+
+	//canon body
+	m_CanonSprite.setTexture(texture2);
+	m_CanonSprite.setOrigin(0, 0);
+	m_CanonSprite.setPosition(345, 75);
+
+	//canon rect
+	sf::IntRect m_CannonRect(0, 114, 228, 114);
+	m_CanonSprite.setTextureRect(m_CannonRect);
+	m_CanonSprite.setRotation(35.0f);
+    
 #ifdef TEST_FPS
 	x_updateFPS.setFont(m_arialFont);
 	x_updateFPS.setPosition(20, 300);
@@ -128,7 +147,9 @@ void Game::render()
 #ifdef TEST_FPS
 	m_window.draw(x_updateFPS);
 	m_window.draw(x_drawFPS);
+	
 	m_window.draw(m_tankSprite);
+    m_window.draw(m_CanonSprite);
 #endif
 	m_window.display();
 }
