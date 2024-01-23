@@ -33,4 +33,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Level1.yaml">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
 #ifdef _DEBUG 
+#pragma comment(lib,"libyaml-cppmdd")
 #pragma comment(lib,"thor-d.lib")
 #pragma comment(lib,"sfml-graphics-d.lib") 
 #pragma comment(lib,"sfml-audio-d.lib") 

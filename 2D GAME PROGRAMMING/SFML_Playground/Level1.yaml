@@ -1,0 +1,5 @@
+tank:
+   name: Tank
+   position : {x:200 , y:200}
+   scale: 2.0f
+   rotation: 45.0f

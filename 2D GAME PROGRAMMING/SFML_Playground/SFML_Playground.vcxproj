@@ -27,6 +27,9 @@
     <ClInclude Include="include\resource.h" />
     <ClInclude Include="include\ScreenSize.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Level1.yaml" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F10133B9-852C-4A93-A994-DC0D1C009AD5}</ProjectGuid>
     <RootNamespace>SFML_Playground</RootNamespace>
