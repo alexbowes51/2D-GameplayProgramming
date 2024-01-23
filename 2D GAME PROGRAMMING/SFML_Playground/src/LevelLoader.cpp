@@ -10,12 +10,16 @@ void operator >> (const YAML::Node& t_levelNode, LevelData& t_level)
 {
    // Process the 'player' mapping 
    t_levelNode["player"] >> t_level.m_player;
+   t_levelNode["background"] >> t_level.m_map;
+
+
+
 
    // Class Exercise: Process the 'enemy' mapping (type and health only for now)
 
 
    // Process the sequence of enemies
-   /* const YAML::Node& enemiesNode = t_levelNode["enemies"].as<YAML::Node>();
+   /*const YAML::Node& enemiesNode = t_levelNode["enemies"].as<YAML::Node>();
    for (unsigned i = 0; i < enemiesNode.size(); ++i)
    {
 	  EnemyData enemy;
@@ -26,7 +30,7 @@ void operator >> (const YAML::Node& t_levelNode, LevelData& t_level)
 
 void LevelLoader::load(int t_levelNr, LevelData& t_level)
 {
-   std::string filename = "./levelData/level" + std::to_string(t_levelNr) + ".yaml";
+   std::string filename = "./Resource/levelData/level" + std::to_string(t_levelNr) + ".yaml";
 
    try
    {

@@ -18,6 +18,17 @@ void Game::init()
 	// Really only necessary is our target FPS is greater than 60.
 	m_window.setVerticalSyncEnabled(true);
 
+	int currentLevel = 1;
+
+	try {
+		LevelLoader::load(currentLevel, m_level);
+	}
+	catch (std::exception& e) {
+		std::cout << "Level Loading failure " << std::endl;
+		std::cout << e.what() << std::endl;
+		throw e;
+	}
+
 	if (!m_arialFont.loadFromFile("BebasNeue.otf"))
 	{
 		std::cout << "Error loading font file";

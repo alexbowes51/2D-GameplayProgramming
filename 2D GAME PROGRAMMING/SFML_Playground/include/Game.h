@@ -10,6 +10,7 @@
 #include <string>
 #include "ScreenSize.h"
 #include <Thor/Resources.hpp>
+#include <LevelLoader.h>
 
 /// <summary>
 /// @author RP
@@ -86,6 +87,7 @@ protected:
 	thor::ResourceHolder<sf::Texture, std::string> m_holder;
 	sf::Sprite m_tankSprite;
 	sf::Sprite m_CanonSprite;
+	LevelData m_level;
 
 #ifdef TEST_FPS
 	sf::Text x_updateFPS;					// text used to display updates per second.
