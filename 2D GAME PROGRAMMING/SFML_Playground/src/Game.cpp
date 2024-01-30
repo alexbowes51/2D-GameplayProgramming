@@ -2,7 +2,7 @@
 #include <iostream>
 
 // Our target FPS
-static double const FPS{ 60.0f };
+static float const FPS{ 60.0f };
 
 ////////////////////////////////////////////////////////////
 Game::Game()

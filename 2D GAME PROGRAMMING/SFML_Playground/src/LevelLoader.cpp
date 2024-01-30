@@ -10,7 +10,8 @@ void operator >> (const YAML::Node& t_levelNode, LevelData& t_level)
 {
    // Process the 'player' mapping 
    t_levelNode["player"] >> t_level.m_player;
-   t_levelNode["background"] >> t_level.m_map;
+ 
+ 
 
 
 
@@ -28,9 +29,11 @@ void operator >> (const YAML::Node& t_levelNode, LevelData& t_level)
    }*/
 }
 
+ 
+
 void LevelLoader::load(int t_levelNr, LevelData& t_level)
 {
-   std::string filename = "./Resource/levelData/level" + std::to_string(t_levelNr) + ".yaml";
+   std::string filename = "./Resources/LevelData/level" + std::to_string(t_levelNr) + ".yaml";
 
    try
    {
@@ -49,7 +52,7 @@ void LevelLoader::load(int t_levelNr, LevelData& t_level)
 	   message = "YAML Parser Error: " + message;
 	   throw std::exception(message.c_str());
    }
-   catch (std::exception& e)
+   catch (std::exception& e) 
    {
 	   std::string message(e.what());
 	   message = "Unexpected Error: " + message;

@@ -3,13 +3,16 @@
 #include <sstream>
 #include <fstream>
 #include <iostream>
-#include "yaml-cpp\yaml.h"
-#include <Game.h>
+#include "src\yaml-cpp\yaml.h"
+#include <vector>
+#include <SFML/System/Vector2.hpp>
+
+
 
 struct PlayerData
 {
-	std::string m_name;
-	int m_xp;
+   std::string m_name;
+   int m_xp{0};
 };
 
 struct MapData
@@ -26,13 +29,22 @@ struct EnemyData
 	float m_y;
 };
 
+struct ObstacleData
+{
+	std::string m_type;
+	sf::Vector2f m_position;
+	double m_rotation;
+};
+
+
+
 struct LevelData
 {
    PlayerData m_player;
-   EnemyData m_enemy;
+	EnemyData m_enemy;
    MapData m_map;
-   std::vector<EnemyData> m_enemies;
-   std::vector<ObstacleData> m_obstacles;
+  std::vector<EnemyData> m_enemies;
+  std::vector<ObstacleData> m_obstacles;
 };
 
 class LevelLoader
@@ -43,9 +55,4 @@ public:
    static void load(int t_levelNr, LevelData& t_level);
 };
 
-struct ObstacleData
-{
-	std::string m_type;
-	sf::Vector2f m_position;
-	double m_rotation;
-};
+
