@@ -12,6 +12,8 @@
 #include <Thor/Resources.hpp>
 #include "LevelLoader.h"
 
+
+
 /// <summary>
 /// @author RP
 /// @date September 2022
@@ -49,7 +51,7 @@ public:
 	///  complete in less than the target time.
 	/// </summary>
 	void run();
-
+	LevelData m_level;
 protected:
 	/// <summary>
 	/// @brief Once-off game initialisation code
@@ -80,14 +82,22 @@ protected:
 	/// <param name="event">system event</param>
 	void processGameEvents(sf::Event&);
 
+	void GenerateWalls();
+
 	// Font used for all text
-	LevelData m_level;
+	
+
 	sf::Font m_arialFont;
 	// main window
 	sf::RenderWindow m_window;
 	thor::ResourceHolder<sf::Texture, std::string> m_holder;
+
 	sf::Sprite m_tankSprite;
 	sf::Sprite m_CanonSprite;
+
+	sf::Sprite m_bgSprite;
+
+	std::vector<sf::Sprite> m_wallSprites;
 	
 
 #ifdef TEST_FPS

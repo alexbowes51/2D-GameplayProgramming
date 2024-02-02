@@ -20,14 +20,14 @@ void Game::init()
 
 	int currentLevel = 1;
 
-	try {
+	/*try {
 		LevelLoader::load(currentLevel, m_level);
 	}
 	catch (std::exception& e) {
 		std::cout << "Level Loading failure " << std::endl;
 		std::cout << e.what() << std::endl;
 		throw e;
-	}
+	}*/
 
 	if (!m_arialFont.loadFromFile("BebasNeue.otf"))
 	{
@@ -35,13 +35,16 @@ void Game::init()
 	}
 
 	m_holder.acquire("tankAtlas", thor::Resources::fromFile<sf::Texture>("resources/Images/SpriteIndex.png"));
+	m_holder.acquire("Background", thor::Resources::fromFile<sf::Texture>("resources/Images/Background.jpg"));
 
 	sf::Texture& texture = m_holder["tankAtlas"];
+	sf::Texture& bgtexture = m_holder["Background"];
+
 
 	//tank body
    m_tankSprite.setTexture(texture);
    m_tankSprite.setOrigin(0,0);
-   m_tankSprite.setPosition(300, 100);
+   m_tankSprite.setPosition(850, 100);
 
 	//tank rect
 	sf::IntRect m_tankRect(0, 0, 246, 114);
@@ -54,12 +57,17 @@ void Game::init()
 	//canon body
 	m_CanonSprite.setTexture(texture2);
 	m_CanonSprite.setOrigin(0, 0);
-	m_CanonSprite.setPosition(345, 75);
+	m_CanonSprite.setPosition(895, 75);
 
 	//canon rect
 	sf::IntRect m_CannonRect(0, 114, 228, 114);
 	m_CanonSprite.setTextureRect(m_CannonRect);
 	m_CanonSprite.setRotation(35.0f);
+
+	//Background 
+	m_bgSprite.setTexture(bgtexture);
+	m_bgSprite.setPosition(0, 0);
+
     
 #ifdef TEST_FPS
 	x_updateFPS.setFont(m_arialFont);
@@ -145,6 +153,26 @@ void Game::processGameEvents(sf::Event& event)
 	}
 }
 
+void Game::GenerateWalls()
+{
+          // Replace the ? With the actual values for the wall image 
+    sf::IntRect wallRect(00,00,22 ,32 );
+    // Create the Walls 
+    for (auto const &obstacle : m_level.m_obstacles)
+    {
+        sf::Sprite sprite;
+        sprite.setTexture(m_holder["tankAtlas"]);
+        sprite.setTextureRect(wallRect);
+        sprite.setOrigin(
+        wallRect.width / 2.0, wallRect.height / 2.0);
+        sprite.setPosition(obstacle.m_position);
+        sprite.setRotation(obstacle.m_rotation);
+        m_wallSprites.push_back(sprite);
+		
+    }
+}
+
+
 ////////////////////////////////////////////////////////////
 void Game::update(double dt)
 {
@@ -158,7 +186,16 @@ void Game::render()
 #ifdef TEST_FPS
 	m_window.draw(x_updateFPS);
 	m_window.draw(x_drawFPS);
+
+
+
+	m_window.draw(m_bgSprite);
+
+	for (int i = 0; i < m_wallSprites.size(); i++) {
+		m_window.draw(m_wallSprites[i]);
+	}
 	
+
 	m_window.draw(m_tankSprite);
     m_window.draw(m_CanonSprite);
 #endif

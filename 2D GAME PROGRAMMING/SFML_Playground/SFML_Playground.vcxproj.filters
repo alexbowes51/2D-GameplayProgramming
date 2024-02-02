@@ -9,11 +9,15 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
+    <Filter Include="resourc">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Resource Files\LevelData">
+    <Filter Include="resources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="resources\LevelData">
       <UniqueIdentifier>{9f66ba01-fd7d-48ec-831a-91af8237853a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -43,8 +47,8 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\LevelData\level1.yaml">
-      <Filter>Resource Files\LevelData</Filter>
+    <None Include="resources\LevelData\level1.yaml">
+      <Filter>resources\LevelData</Filter>
     </None>
   </ItemGroup>
 </Project>

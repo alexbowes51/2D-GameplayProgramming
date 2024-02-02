@@ -1,4 +1,5 @@
 #include "LevelLoader.h"
+#include "yaml-cpp/yaml.h"
 
 void operator >> (const YAML::Node& t_playerNode, PlayerData& t_player)
 {
@@ -8,10 +9,15 @@ void operator >> (const YAML::Node& t_playerNode, PlayerData& t_player)
 
 void operator >> (const YAML::Node& t_levelNode, LevelData& t_level)
 {
-   // Process the 'player' mapping 
+
    t_levelNode["player"] >> t_level.m_player;
+
  
- 
+   const YAML::Node& obstacleNode = t_levelNode["obstacles"].as<YAML::Node>();
+   for (unsigned i = 0; i < obstacleNode.size(); i++) {
+	   ObstacleData obstacle;
+	   t_level.m_obstacles.push_back(obstacle);
+   }
 
 
 
@@ -33,7 +39,7 @@ void operator >> (const YAML::Node& t_levelNode, LevelData& t_level)
 
 void LevelLoader::load(int t_levelNr, LevelData& t_level)
 {
-   std::string filename = "./Resources/LevelData/level" + std::to_string(t_levelNr) + ".yaml";
+   std::string filename = "\resources\LevelData\level" + std::to_string(t_levelNr) + ".yaml";
 
    try
    {

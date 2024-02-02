@@ -3,7 +3,6 @@
 #include <sstream>
 #include <fstream>
 #include <iostream>
-#include "src\yaml-cpp\yaml.h"
 #include <vector>
 #include <SFML/System/Vector2.hpp>
 
@@ -15,7 +14,7 @@ struct PlayerData
    int m_xp{0};
 };
 
-struct MapData
+struct BackgroundData
 {
 	std::string m_name;
 	
@@ -41,10 +40,10 @@ struct ObstacleData
 struct LevelData
 {
    PlayerData m_player;
-	EnemyData m_enemy;
-   MapData m_map;
-  std::vector<EnemyData> m_enemies;
-  std::vector<ObstacleData> m_obstacles;
+   EnemyData m_enemy;
+   BackgroundData m_background;
+   std::vector<EnemyData> m_enemies;
+   std::vector<ObstacleData> m_obstacles;
 };
 
 class LevelLoader
