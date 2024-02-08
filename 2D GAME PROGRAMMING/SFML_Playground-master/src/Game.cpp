@@ -1,7 +1,5 @@
-//By:Alex Bowes
-
+//by:Alex Bowes 
 #include "Game.h"
-
 #include <iostream>
 
 // Our target FPS
@@ -21,10 +19,20 @@ void Game::init()
 	// Really only necessary is our target FPS is greater than 60.
 	m_window.setVerticalSyncEnabled(true);
 
-	if (!m_arialFont.loadFromFile("BebasNeue.otf"))
+	if (!m_arialFont.loadFromFile("resources/BebasNeue.otf"))
 	{
 		std::cout << "Error loading font file";
 	}
+
+	m_holder.acquire("tankAtlas", thor::Resources::fromFile<sf::Texture>("resources/Images/spriteIndex.png"));
+	sf::Texture& texture = m_holder["tankAtlas"];
+
+	m_tankSprite.setTexture(texture);
+    m_tankSprite.setOrigin(246.0f, 105.0f); //the sprite is being drawn from position 100,100 with an origin of 0,0 when you put the origin to the centre of the Sprite the centre of the sprite is then placed on position 100,100 causing it to be displayed off screen 
+	m_tankSprite.setPosition(100, 100);
+	//m_tankSprite.setRotation(90.0f); // rotates it 90 degrees clockwise on its origin 
+	m_tankSprite.rotate(-90.0f); // rotates it -90 degrees anti-clockwise on its origin 
+	
 
 #ifdef TEST_FPS
 	x_updateFPS.setFont(m_arialFont);
@@ -36,6 +44,8 @@ void Game::init()
 	x_drawFPS.setCharacterSize(24);
 	x_drawFPS.setFillColor(sf::Color::White);
 #endif
+
+	//m_holder.release("tankAtkas"); // it throws an exception in Resourceholder.inl
 }
 
 ////////////////////////////////////////////////////////////
@@ -120,6 +130,8 @@ void Game::update(double dt)
 void Game::render()
 {
 	m_window.clear(sf::Color(0, 0, 0, 0));
+	m_window.draw(m_tankSprite);
+
 #ifdef TEST_FPS
 	m_window.draw(x_updateFPS);
 	m_window.draw(x_drawFPS);
