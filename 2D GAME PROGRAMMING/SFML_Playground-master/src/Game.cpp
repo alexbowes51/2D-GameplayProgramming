@@ -186,9 +186,9 @@ void Game::render()
 	m_window.draw(m_tankSprite);
 	m_window.draw(m_CannonSprite);
 
-	/*for (auto const& obstacle : m_level.m_obstacles) {
-		m_window.draw(m_wallSprites);
-	}*/
+	for (auto& walls : m_wallSprites) {
+		m_window.draw(walls);
+	}
 
 #ifdef TEST_FPS
 	m_window.draw(x_updateFPS);
