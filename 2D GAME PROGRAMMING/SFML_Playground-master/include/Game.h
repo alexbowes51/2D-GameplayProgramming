@@ -10,6 +10,7 @@
 #include <Thor/Resources.hpp>
 #include <string>
 #include "ScreenSize.h"
+#include "LevelLoader.h"
 
 /// <summary>
 /// @author RP
@@ -79,6 +80,9 @@ protected:
 	/// <param name="event">system event</param>
 	void processGameEvents(sf::Event&);
 
+	//loads the game level data 
+	LevelData m_level;
+
 	// Font used for all text
 	sf::Font m_arialFont;
 	// main window
@@ -87,6 +91,10 @@ protected:
 	thor::ResourceHolder<sf::Texture, std::string> m_holder;
     
 	sf::Sprite m_tankSprite;
+	sf::Sprite m_CannonSprite;
+	sf::Sprite m_bgSprite;
+	std::vector<sf::Sprite> m_wallSprites;
+
 
 #ifdef TEST_FPS
 	sf::Text x_updateFPS;					// text used to display updates per second.
@@ -95,5 +103,6 @@ protected:
 	int x_updateFrameCount{ 0 };			// updates per second counter.
 	int x_drawFrameCount{ 0 };				// draws per second counter.
 #endif // TEST_FPS
-
+private:
+	void generateWalls();
 };

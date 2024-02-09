@@ -41,6 +41,11 @@ void operator >> (const YAML::Node& t_tankNode, TankData& t_tank)
 {
 	t_tank.m_position.x = t_tankNode["position"]["x"].as<float>();
 	t_tank.m_position.y = t_tankNode["position"]["y"].as<float>();
+
+	t_tank.m_scale.x = t_tankNode["scale"]["x"].as<float>();
+	t_tank.m_scale.y = t_tankNode["scale"]["y"].as<float>();
+
+	//std::cout << "tank void op called" << std::endl;
 }
 
 /// <summary>
@@ -54,9 +59,9 @@ void operator >> (const YAML::Node& t_tankNode, TankData& t_tank)
 ////////////////////////////////////////////////////////////
 void operator >> (const YAML::Node& t_levelNode, LevelData& t_level)
 {
-	t_levelNode["background"] >> t_level.m_background;
+	t_levelNode["background"] >> t_level.m_background; // calls the void operator for background
 
-	t_levelNode["tank"] >> t_level.m_tank;
+	t_levelNode["tank"] >> t_level.m_tank;// calls the void operator for tank
 
 	const YAML::Node& obstaclesNode = t_levelNode["obstacles"].as<YAML::Node>();
 	for (unsigned i = 0; i < obstaclesNode.size(); ++i)
