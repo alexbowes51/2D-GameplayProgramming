@@ -85,7 +85,7 @@ protected:
 	sf::RenderWindow m_window;
     
 	thor::ResourceHolder<sf::Texture, std::string> m_holder;
-
+    
 	sf::Sprite m_tankSprite;
 
 #ifdef TEST_FPS

@@ -1,6 +1,7 @@
 //by:Alex Bowes 
 #include "Game.h"
 #include <iostream>
+#include "LevelLoader.h"
 
 // Our target FPS
 static double const FPS{ 60.0f };
@@ -16,7 +17,7 @@ Game::Game()
 ////////////////////////////////////////////////////////////
 void Game::init()
 {
-	// Really only necessary is our target FPS is greater than 60.
+	// Really only necessary is our target FPS is greate than 60.
 	m_window.setVerticalSyncEnabled(true);
 
 	if (!m_arialFont.loadFromFile("resources/BebasNeue.otf"))
