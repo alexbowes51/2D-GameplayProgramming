@@ -1,7 +1,7 @@
 //by:Alex Bowes 
 #include "Game.h"
 #include <iostream>
-
+	
 
 // Our target FPS
 static double const FPS{ 60.0f };
@@ -9,6 +9,7 @@ static double const FPS{ 60.0f };
 ////////////////////////////////////////////////////////////
 Game::Game()
 	: m_window(sf::VideoMode(ScreenSize::s_width, ScreenSize::s_height, 32), "SFML Playground", sf::Style::Default)
+	,m_tank(m_holder)
 {
 	int currentLevel = 1;
 
@@ -23,9 +24,6 @@ Game::Game()
 
 	init();
 	generateWalls();
-	
-
-
 }
 
 ////////////////////////////////////////////////////////////
@@ -39,33 +37,18 @@ void Game::init()
 		std::cout << "Error loading font file";
 	}
 
-	m_holder.acquire("tankAtlas", thor::Resources::fromFile<sf::Texture>("resources/Images/spriteIndex.png"));
-	sf::Texture& texture = m_holder["tankAtlas"];
-	
-	
-
 	m_holder.acquire("background", thor::Resources::fromFile<sf::Texture>("resources/Images/Background.jpg"));
+
 	sf::Texture& bgtexture = m_holder["background"];
 	m_bgSprite.setTexture(bgtexture);
+
+	m_tank.setPosition(m_level.m_tank.m_position);
+	m_tank.setScale(m_level.m_tank.m_scale);
 	
-	m_tankSprite.setTexture(texture);
-	m_tankSprite.setTextureRect(sf::IntRect(0,0,245,114));
-	m_tankSprite.setOrigin(122.5, 57);
-	m_tankSprite.setPosition(m_level.m_tank.m_position);
-	m_tankSprite.setScale(m_level.m_tank.m_scale);
-	//m_tankSprite.setRotation(90.0f); // rotates it 90 degrees clockwise on its origin 
-	//m_tankSprite.rotate(-90.0f); // rotates it -90 degrees anti-clockwise on its origin 
-    //m_tankSprite.setOrigin(246.0f, 105.0f); //the sprite is being drawn from position 100,100 with an origin of 0,0 when you put the origin to the centre of the Sprite the centre of the sprite is then placed on position 100,100 causing it to be displayed off screen 
 
-	m_CannonSprite.setTexture(texture);
-	m_CannonSprite.setTextureRect(sf::IntRect(0, 114, 229, 96));
-	m_CannonSprite.setOrigin(114.5, 48);
-	m_CannonSprite.setPosition(m_level.m_tank.m_position);
-	m_CannonSprite.setScale(m_level.m_tank.m_scale);
-
-
-
-	
+	//m_tankBase.setRotation(90.0f); // rotates it 90 degrees clockwise on its origin 
+	//m_tankBase.rotate(-90.0f); // rotates it -90 degrees anti-clockwise on its origin 
+	//m_tankBase.setOrigin(246.0f, 105.0f); //the sprite is being drawn from position 100,100 with an origin of 0,0 when you put the origin to the centre of the Sprite the centre of the sprite is then placed on position 100,100 causing it to be displayed off screen 
 
 #ifdef TEST_FPS
 	x_updateFPS.setFont(m_arialFont);
@@ -144,9 +127,18 @@ void Game::processGameEvents(sf::Event& event)
 		case sf::Keyboard::Escape:
 			m_window.close();
 			break;
-		case sf::Keyboard::Up:
-			// Up key was pressed...
+	/*	case sf::Keyboard::Up:
+			m_tank.increaseSpeed();
 			break;
+		case sf::Keyboard::Down:
+			m_tank.decreaseSpeed();
+			break;
+		case sf::Keyboard::Right:
+			m_tank.increaseRotation();
+			break;
+		case sf::Keyboard::Left:
+			m_tank.decreaseRotation();
+			break;*/
 		default:
 			break;
 		}
@@ -175,7 +167,20 @@ void Game::generateWalls()
 ////////////////////////////////////////////////////////////
 void Game::update(double dt)
 {
+	m_tank.update(dt);
 
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+		m_tank.increaseRotation();
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+		m_tank.decreaseRotation();
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+		m_tank.decreaseSpeed();
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+		m_tank.increaseSpeed();
+	}
 }
 
 ////////////////////////////////////////////////////////////
@@ -183,9 +188,9 @@ void Game::render()
 {
 	m_window.clear(sf::Color(0, 0, 0, 0));
 	m_window.draw(m_bgSprite);
-	m_window.draw(m_tankSprite);
-	m_window.draw(m_CannonSprite);
-
+	m_tank.render(m_window);
+	
+	
 	for (auto& walls : m_wallSprites) {
 		m_window.draw(walls);
 	}

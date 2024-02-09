@@ -11,6 +11,7 @@
 #include <string>
 #include "ScreenSize.h"
 #include "LevelLoader.h"
+#include "Tank.h"
 
 /// <summary>
 /// @author RP
@@ -82,16 +83,18 @@ protected:
 
 	//loads the game level data 
 	LevelData m_level;
-
+	 
 	// Font used for all text
 	sf::Font m_arialFont;
 	// main window
 	sf::RenderWindow m_window;
-    
+
+     
+
 	thor::ResourceHolder<sf::Texture, std::string> m_holder;
-    
-	sf::Sprite m_tankSprite;
-	sf::Sprite m_CannonSprite;
+
+   Tank m_tank;
+
 	sf::Sprite m_bgSprite;
 	std::vector<sf::Sprite> m_wallSprites;
 

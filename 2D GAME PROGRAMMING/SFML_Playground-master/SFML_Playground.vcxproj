@@ -21,12 +21,16 @@
   <ItemGroup>
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\LevelLoader.h" />
+    <ClInclude Include="include\MathUtility.h" />
     <ClInclude Include="include\ScreenSize.h" />
+    <ClInclude Include="include\Tank.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\LevelLoader.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\MathUtility.cpp" />
+    <ClCompile Include="src\Tank.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\levelData\level1.yaml" />
@@ -95,6 +99,8 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SFML_SDK)\include; .\include; .</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <PreprocessorDefinitions>_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SFML_SDK)\lib; .\lib</AdditionalLibraryDirectories>
