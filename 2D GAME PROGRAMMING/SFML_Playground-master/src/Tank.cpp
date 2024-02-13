@@ -186,20 +186,20 @@ bool Tank::checkWallCollision()
 		// Checks if either the tank base or turret has collided
 		// with the current wall sprite.
 		if (CollisionDetector::collision(m_turret, sprite))
-
 		{
-			// Get contact normal vector between the turret and the wall
-			m_contactNormal = m_turret.getPosition() - sprite.getPosition();
+			if (CollisionDetector::pixelPerfectTest(m_turret, sprite)) {
+				// Get contact normal vector between the turret and the wall
+				m_contactNormal = m_turret.getPosition() - sprite.getPosition();
 
-			return true;
+				return true;
+			}
+			else if (CollisionDetector::collision(m_tankBase, sprite))
+			{
+				// Get contact normal vector between tank base and the wall
+				m_contactNormal = m_tankBase.getPosition() - sprite.getPosition();
+				return true;
+			}
 		}
-		else if (CollisionDetector::collision(m_tankBase, sprite))
-		{
-			// Get contact normal vector between tank base and the wall
-			m_contactNormal = m_tankBase.getPosition() - sprite.getPosition();
-			return true;
-		}
-
 	}
 	return false;
 }
