@@ -9,7 +9,7 @@ static double const FPS{ 60.0f };
 ////////////////////////////////////////////////////////////
 Game::Game()
 	: m_window(sf::VideoMode(ScreenSize::s_width, ScreenSize::s_height, 32), "SFML Playground", sf::Style::Default)
-	,m_tank(m_holder)
+	,m_tank(m_holder, m_wallSprites)
 {
 	int currentLevel = 1;
 
@@ -127,18 +127,6 @@ void Game::processGameEvents(sf::Event& event)
 		case sf::Keyboard::Escape:
 			m_window.close();
 			break;
-	/*	case sf::Keyboard::Up:
-			m_tank.increaseSpeed();
-			break;
-		case sf::Keyboard::Down:
-			m_tank.decreaseSpeed();
-			break;
-		case sf::Keyboard::Right:
-			m_tank.increaseRotation();
-			break;
-		case sf::Keyboard::Left:
-			m_tank.decreaseRotation();
-			break;*/
 		default:
 			break;
 		}
@@ -169,17 +157,8 @@ void Game::update(double dt)
 {
 	m_tank.update(dt);
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-		m_tank.increaseRotation();
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-		m_tank.decreaseRotation();
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-		m_tank.decreaseSpeed();
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-		m_tank.increaseSpeed();
+	if (m_tank.centreNose == true) {
+		m_tank.centreTurret();
 	}
 }
 
