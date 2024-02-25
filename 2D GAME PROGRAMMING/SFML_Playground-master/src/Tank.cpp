@@ -153,7 +153,7 @@ void Tank::centreTurret()
 	if (m_rotation >= 180.0f) {
 		m_turretRotation = m_turretRotation + 360;
 	}
-	else if(m_turretRotation >= 180)
+	else if(m_turretRotation >= 180.0f)
 	{
 		m_turretRotation = m_turretRotation - 360;
 	}

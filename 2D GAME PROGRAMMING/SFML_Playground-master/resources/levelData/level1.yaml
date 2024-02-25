@@ -76,3 +76,20 @@ obstacles:
    - type: wall
      position: {x: 1032, y: 632}
      rotation: 0
+projectiles:
+   - type: bullet
+     position: {x: 850, y: 100}
+     scale: {x: 0.5, y: 0.5}
+     rotation: 0 
+   - type: bullet
+     position: {x: 850, y: 100}
+     scale: {x: 0.5, y: 0.5}      
+     rotation: 0 
+   - type: bullet
+     position: {x: 850, y: 100}
+     scale: {x: 0.5, y: 0.5}
+     rotation: 0 
+   - type: bullet
+     position: {x: 850, y: 100}
+     scale: {x: 0.5, y: 0.5}
+     rotation: 0 

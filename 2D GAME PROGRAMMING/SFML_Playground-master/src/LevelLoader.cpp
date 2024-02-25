@@ -10,6 +10,23 @@
 /// <param name="t_obstacleNode">A YAML node</param>
 /// <param name="t_obstacle">A simple struct to store the obstacle data</param>
 ////////////////////////////////////////////////////////////
+/// 
+
+void operator >> (const YAML::Node& t_projectileNode, ProjectileData& t_Projectile)
+{
+	t_Projectile.m_type = t_projectileNode["type"].as<std::string>();
+
+	t_Projectile.m_position.x = t_projectileNode["position"]["x"].as<float>();
+	t_Projectile.m_position.y = t_projectileNode["position"]["y"].as<float>();
+
+	t_Projectile.m_scale.x = t_projectileNode["scale"]["x"].as<float>();
+	t_Projectile.m_scale.y = t_projectileNode["scale"]["y"].as<float>();
+
+	t_Projectile.m_rotation = t_projectileNode["rotation"].as<double>();
+
+	std::cout << "bullet operater called " << std::endl;
+}
+
 void operator >> (const YAML::Node& t_obstacleNode, ObstacleData& t_obstacle)
 {
 	t_obstacle.m_type = t_obstacleNode["type"].as<std::string>();
@@ -69,6 +86,14 @@ void operator >> (const YAML::Node& t_levelNode, LevelData& t_level)
 		ObstacleData obstacle;
 		obstaclesNode[i] >> obstacle;
 		t_level.m_obstacles.push_back(obstacle);
+	}
+
+	const YAML::Node& projectileNode = t_levelNode["projectiles"].as<YAML::Node>();
+	for (unsigned i = 0; i < projectileNode.size(); ++i)
+	{
+		ProjectileData projectile;
+		projectileNode[i] >> projectile;
+		t_level.m_projectiles.push_back(projectile);
 	}
 }
 

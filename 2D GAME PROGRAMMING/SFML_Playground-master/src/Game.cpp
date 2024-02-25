@@ -10,6 +10,7 @@ static double const FPS{ 60.0f };
 Game::Game()
 	: m_window(sf::VideoMode(ScreenSize::s_width, ScreenSize::s_height, 32), "SFML Playground", sf::Style::Default)
 	,m_tank(m_holder, m_wallSprites)
+	,m_projectile(m_holder,m_ProjectileSprites)
 {
 	int currentLevel = 1;
 
@@ -24,6 +25,7 @@ Game::Game()
 
 	init();
 	generateWalls();
+	timer();
 }
 
 ////////////////////////////////////////////////////////////
@@ -44,6 +46,13 @@ void Game::init()
 
 	m_tank.setPosition(m_level.m_tank.m_position);
 	m_tank.setScale(m_level.m_tank.m_scale);
+
+	for (auto& projectile : m_ProjectileSprites) {
+		for (auto& projectileData : m_level.m_projectiles) {
+			projectile.setPosition(projectileData.m_position);
+		}
+	}
+
 	
 
 	//m_tankBase.setRotation(90.0f); // rotates it 90 degrees clockwise on its origin 
@@ -152,10 +161,37 @@ void Game::generateWalls()
 
 }
 
+void Game::timer()
+{
+	m_timer.setFont(m_arialFont);
+	m_timer.setCharacterSize(50U);
+	m_timer.setPosition(1150.0f, 25.0f);
+	m_timer.setFillColor(sf::Color::White);
+	m_timer.setString("Time : " + std::to_string(m_time));
+}
+
+void Game::updateTimer()
+{
+	
+	float frameTime = 16.67; //60 fps in miliseconds
+
+	
+	m_time -= frameTime / 1000.0; // Convert miliseconds to seconds
+
+	if (m_time < 0) {
+		m_time = 0;
+	}
+
+
+	m_timer.setString("Time: " + std::to_string(m_time));
+}
+
 ////////////////////////////////////////////////////////////
 void Game::update(double dt)
 {
+	updateTimer();
 	m_tank.update(dt);
+	m_projectile.update(dt);
 
 	if (m_tank.centreNose == true) {
 		m_tank.centreTurret();
@@ -168,12 +204,14 @@ void Game::render()
 	m_window.clear(sf::Color(0, 0, 0, 0));
 	m_window.draw(m_bgSprite);
 	m_tank.render(m_window);
+	m_projectile.render(m_window);
 	
 	
 	for (auto& walls : m_wallSprites) {
 		m_window.draw(walls);
 	}
 
+	m_window.draw(m_timer);
 #ifdef TEST_FPS
 	m_window.draw(x_updateFPS);
 	m_window.draw(x_drawFPS);

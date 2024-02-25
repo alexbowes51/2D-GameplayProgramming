@@ -12,6 +12,7 @@
 #include "ScreenSize.h"
 #include "LevelLoader.h"
 #include "Tank.h"
+#include "Projectile.h"
 
 /// <summary>
 /// @author RP
@@ -94,9 +95,14 @@ protected:
 	thor::ResourceHolder<sf::Texture, std::string> m_holder;
 
    Tank m_tank;
+   Projectile m_projectile;
 
 	sf::Sprite m_bgSprite;
 	std::vector<sf::Sprite> m_wallSprites;
+	std::vector<sf::Sprite> m_ProjectileSprites;
+	sf::Text m_timer;
+	float m_time{ 60.0f };
+	float elapsedTime = 0.0f;
 
 
 #ifdef TEST_FPS
@@ -108,4 +114,6 @@ protected:
 #endif // TEST_FPS
 private:
 	void generateWalls();
+	void timer();
+	void updateTimer();
 };

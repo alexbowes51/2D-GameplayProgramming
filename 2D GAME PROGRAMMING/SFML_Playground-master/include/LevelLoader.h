@@ -10,6 +10,16 @@
 /// @brief A struct to represent Obstacle data in the level.
 /// 
 /// </summary>
+/// 
+
+struct ProjectileData 
+{
+	std::string m_type;
+	sf::Vector2f m_position;
+	sf::Vector2f m_scale;
+	double m_rotation;
+};
+
 struct ObstacleData
 {
 	std::string m_type;
@@ -45,6 +55,7 @@ struct LevelData
 {
 	BackgroundData m_background;
 	TankData m_tank;
+	std::vector<ProjectileData> m_projectiles;
 	std::vector<ObstacleData> m_obstacles;
 };
 
