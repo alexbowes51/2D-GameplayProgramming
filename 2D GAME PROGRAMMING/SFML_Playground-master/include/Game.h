@@ -12,7 +12,6 @@
 #include "ScreenSize.h"
 #include "LevelLoader.h"
 #include "Tank.h"
-#include "Projectile.h"
 
 /// <summary>
 /// @author RP
@@ -95,7 +94,6 @@ protected:
 	thor::ResourceHolder<sf::Texture, std::string> m_holder;
 
    Tank m_tank;
-   Projectile m_projectile;
 
 	sf::Sprite m_bgSprite;
 	std::vector<sf::Sprite> m_wallSprites;

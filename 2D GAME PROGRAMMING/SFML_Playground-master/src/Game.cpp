@@ -11,7 +11,6 @@ static double const FPS{ 60.0f };
 Game::Game()
 	: m_window(sf::VideoMode(ScreenSize::s_width, ScreenSize::s_height, 32), "SFML Playground", sf::Style::Default)
 	,m_tank(m_holder, m_wallSprites)
-	,m_projectile(m_holder,m_ProjectileSprites)
 {
 	int currentLevel = 1;
 
@@ -189,15 +188,6 @@ void Game::update(double dt)
 {
 	updateTimer();
 	m_tank.update(dt);
-	m_projectile.update(dt);
-
-	if (m_tank.centreNose == true) {
-		m_tank.centreTurret();
-	}
-
-	if (m_tank.centreNose == false) {
-		m_tank.tankAimSystem();
-	}
 }
 
 ////////////////////////////////////////////////////////////
@@ -206,7 +196,6 @@ void Game::render()
 	m_window.clear(sf::Color(0, 0, 0, 0));
 	m_window.draw(m_bgSprite);
 	m_tank.render(m_window);
-	m_projectile.render(m_window);
 	
 	
 	for (auto& walls : m_wallSprites) {

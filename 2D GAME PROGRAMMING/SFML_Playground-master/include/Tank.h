@@ -3,6 +3,7 @@
 #include <Thor/Resources.hpp>
 #include "MathUtility.h"
 #include "CollisionDetector.h"
+#include "LevelLoader.h"
 
 /// <summary>
 /// @brief A simple tank controller.
@@ -11,6 +12,8 @@
 /// </summary>
 
 enum class TankState{NORMAL,COLLIDING};
+
+enum class ProjectileStat{NORMAL,COLLIDING};
 
 class Tank
 {
@@ -34,8 +37,10 @@ public:
 	void centreTurret();
 
 	void tankAimSystem();
+	void tankShootingSystem();
 
 	bool checkWallCollision();
+	void checkbulletbounds();
 	void deflect(double dt);
 
 	double m_speed{ 0.0 };
@@ -50,14 +55,30 @@ public:
 	float NewPos_x{ 0 };
 	float NewPos_y{ 0 };
 
+	sf::Vector2f m_BulletVelocity{ 0.0f,0.0f };
+
+	LevelData m_level;
+
+	bool m_Click = false;
+	bool m_Fire = false;
+	bool m_aiming = true;
+
+	int m_hits = 0;
+	int m_misses = 0;
+	
 	
 private:
 	void initSprites();
+	void setupbullets();
+
+	
 	sf::Sprite m_tankBase;
 	sf::Sprite m_turret;
 	thor::ResourceHolder<sf::Texture, std::string> & m_holder;
 	std::vector<sf::Sprite>& m_wallSprites;
+	std::vector<sf::Sprite> m_ProjectileSprites;
 	sf::Vector2f m_contactNormal;
 	TankState m_state{ TankState::NORMAL };
+
 		
 };
