@@ -33,6 +33,8 @@ public:
 	void HandleKeyInput();
 	void centreTurret();
 
+	void tankAimSystem();
+
 	bool checkWallCollision();
 	void deflect(double dt);
 

@@ -1,6 +1,7 @@
 //by:Alex Bowes 
 #include "Game.h"
 #include <iostream>
+#include <iomanip> // header fo std::Fixed + std::setprecision
 	
 
 // Our target FPS
@@ -172,18 +173,15 @@ void Game::timer()
 
 void Game::updateTimer()
 {
-	
-	float frameTime = 16.67; //60 fps in miliseconds
-
-	
-	m_time -= frameTime / 1000.0; // Convert miliseconds to seconds
+	float FrameRateMiliseconds = 16.67; //60 fps in miliseconds
+	m_time -= FrameRateMiliseconds / 1000.0; // Convert miliseconds to seconds
 
 	if (m_time < 0) {
 		m_time = 0;
 	}
-
-
-	m_timer.setString("Time: " + std::to_string(m_time));
+	std::stringstream stream;
+	stream << "Time: " << std::fixed << std::setprecision(2) << m_time;
+	m_timer.setString(stream.str());
 }
 
 ////////////////////////////////////////////////////////////
@@ -195,6 +193,10 @@ void Game::update(double dt)
 
 	if (m_tank.centreNose == true) {
 		m_tank.centreTurret();
+	}
+
+	if (m_tank.centreNose == false) {
+		m_tank.tankAimSystem();
 	}
 }
 

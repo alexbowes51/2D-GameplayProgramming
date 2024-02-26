@@ -101,7 +101,7 @@ protected:
 	std::vector<sf::Sprite> m_wallSprites;
 	std::vector<sf::Sprite> m_ProjectileSprites;
 	sf::Text m_timer;
-	float m_time{ 60.0f };
+	float m_time{ 60.0 };
 	float elapsedTime = 0.0f;
 
 

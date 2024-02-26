@@ -178,13 +178,25 @@ void Tank::centreTurret()
 	}
 }
 
+void Tank::tankAimSystem()
+{
+	sf::Vector2i mouseLocation = sf::Mouse::getPosition();
+	// Calculate the direction vector from turrent to mouse 
+	sf::Vector2f direction = sf::Vector2f(mouseLocation.x, mouseLocation.y) - m_turret.getPosition();
+
+	// Calculate the length of the direction vector
+	float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+
+	// Calculate the angle between the turrent and the mouse cursor using atan2
+	float AngleRadians = std::atan2(direction.y, direction.x);
+	float AngleDegrees = AngleRadians * 180 / 3.14; // Convert radians to degrees
+
+	m_turret.setRotation(AngleDegrees + 35); // Adjust sprite orientation
+}
+
 bool Tank::checkWallCollision()
 {
-	for (sf::Sprite const& sprite : m_wallSprites)
-
-	{
-		// Checks if either the tank base or turret has collided
-		// with the current wall sprite.
+	for (sf::Sprite const& sprite : m_wallSprites){
 		if (CollisionDetector::collision(m_turret, sprite))
 		{
 			if (CollisionDetector::pixelPerfectTest(m_turret, sprite)) {
