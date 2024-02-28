@@ -11,17 +11,24 @@
 /// <param name="t_obstacle">A simple struct to store the obstacle data</param>
 ////////////////////////////////////////////////////////////
 /// 
+/// 
+
+//void operator >> (const YAML::Node& t_enemiesNode, EnemyTankData& t_enemytank)
+//{
+//	t_enemytank.m_type = t_enemiesNode["type"].as<std::string>();
+//	t_enemytank.m_position.x = t_enemiesNode["position"]["x"].as<float>();
+//	t_enemytank.m_position.y = t_enemiesNode["position"]["y"].as<float>();
+//	t_enemytank.m_rotation = t_enemiesNode["rotation"].as<double>();
+//	std::cout << "enemy operater called " << std::endl;
+//}
 
 void operator >> (const YAML::Node& t_projectileNode, ProjectileData& t_Projectile)
 {
 	t_Projectile.m_type = t_projectileNode["type"].as<std::string>();
-
 	t_Projectile.m_position.x = t_projectileNode["position"]["x"].as<float>();
 	t_Projectile.m_position.y = t_projectileNode["position"]["y"].as<float>();
-
 	t_Projectile.m_scale.x = t_projectileNode["scale"]["x"].as<float>();
 	t_Projectile.m_scale.y = t_projectileNode["scale"]["y"].as<float>();
-
 	t_Projectile.m_rotation = t_projectileNode["rotation"].as<double>();
 
 	std::cout << "bullet operater called " << std::endl;
@@ -33,6 +40,7 @@ void operator >> (const YAML::Node& t_obstacleNode, ObstacleData& t_obstacle)
 	t_obstacle.m_position.x = t_obstacleNode["position"]["x"].as<float>();
 	t_obstacle.m_position.y = t_obstacleNode["position"]["y"].as<float>();
 	t_obstacle.m_rotation = t_obstacleNode["rotation"].as<double>();
+	std::cout << "obstacle operater called" << std::endl;
 }
 
 /// <summary>
@@ -62,7 +70,7 @@ void operator >> (const YAML::Node& t_tankNode, TankData& t_tank)
 	t_tank.m_scale.x = t_tankNode["scale"]["x"].as<float>();
 	t_tank.m_scale.y = t_tankNode["scale"]["y"].as<float>();
 
-	//std::cout << "tank void op called" << std::endl;
+	std::cout << "tank void op called" << std::endl;
 }
 
 /// <summary>
@@ -95,6 +103,14 @@ void operator >> (const YAML::Node& t_levelNode, LevelData& t_level)
 		projectileNode[i] >> projectile;
 		t_level.m_projectiles.push_back(projectile);
 	}
+
+	/*const YAML::Node& enemiesNode = t_levelNode["enemies_tanks"].as<YAML::Node>();
+	for (unsigned i = 0; i < enemiesNode.size(); ++i)
+	{
+		EnemyTankData enemy;
+		enemiesNode[i] >> enemy;
+		t_level.m_enemies_tanks.push_back(enemy);
+	}*/
 }
 
 ////////////////////////////////////////////////////////////

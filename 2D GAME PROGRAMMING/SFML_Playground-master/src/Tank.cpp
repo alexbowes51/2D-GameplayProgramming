@@ -1,4 +1,5 @@
 #include "Tank.h"
+#include <iomanip>
 using namespace MathUtility;
 
 
@@ -7,7 +8,6 @@ Tank::Tank(thor::ResourceHolder<sf::Texture, std::string>& t_holder,
 	: m_holder(t_holder),
 	  m_wallSprites(t_wallSprites)
 {
-
 	int currentLevel = 1;
 
 	try {
@@ -17,6 +17,11 @@ Tank::Tank(thor::ResourceHolder<sf::Texture, std::string>& t_holder,
 		std::cout << "Level Loading Failed" << std::endl;
 		std::cout << e.what() << std::endl;
 		throw e;
+	}
+
+	if (!m_arialFont.loadFromFile("resources/BebasNeue.otf"))
+	{
+		std::cout << "Error loading font file";
 	}
 
 	initSprites();
@@ -46,9 +51,6 @@ void Tank::update(double dt)
 		}
 	}
 
-	if (m_speed > 0) {
-		m_speed *= 0.99;
-	}
 	
 	if (checkWallCollision()){
 		m_state = TankState::COLLIDING;
@@ -80,10 +82,10 @@ void Tank::update(double dt)
 		}
 
 		if (m_speed > 0) {
-			m_speed -= 0.09;
+			m_speed -= 0.9;
 		}
-		else {
-			m_speed += 0.09;
+		if(m_speed < 0){
+			m_speed += 0.9;
 		}
 
 
@@ -98,6 +100,7 @@ void Tank::render(sf::RenderWindow & window)
 {
 	window.draw(m_tankBase);
 	window.draw(m_turret);
+	window.draw(m_Accrucity);
 
 	for (auto& projectile : m_ProjectileSprites) {
 		window.draw(projectile);
@@ -196,7 +199,14 @@ void Tank::HandleKeyInput()
 		centreNose = true;
 	}
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+		bool spacebare;
+		spacebare = true;
 		m_Fire = true;
+
+		if (spacebare) {
+			m_Shots = m_Shots + 1;
+			spacebare = false;
+		}
 	}
 	
 }
@@ -251,12 +261,12 @@ void Tank::tankAimSystem()
 			projectile.setRotation(AngleDegrees);
 		}
 	}
+
 }
 
 bool Tank::checkWallCollision()
 {
 	for (sf::Sprite const& wall : m_wallSprites) {
-
 		//collisions for tank 
 		if (CollisionDetector::collision(m_turret, wall))
 		{
@@ -266,7 +276,7 @@ bool Tank::checkWallCollision()
 
 				return true;
 			}
-			else if (CollisionDetector::collision(m_tankBase, wall))
+			else if (CollisionDetector::pixelPerfectTest(m_tankBase, wall))
 			{
 				// Get contact normal vector between tank base and the wall
 				m_contactNormal = m_tankBase.getPosition() - wall.getPosition();
@@ -282,15 +292,22 @@ bool Tank::checkWallCollision()
 			//collisions for projectiles
 			if (CollisionDetector::collision(projectile, wall)) {
 				if (CollisionDetector::pixelPerfectTest(projectile, wall)) {
-					m_Fire = false;
-					m_misses = m_misses + 1;
+					bool hit;
+					hit = true;
+
+					if (hit) {
+						m_hits = m_hits + 1;
+						hit = false;
+						m_Fire = false;
+					}
+	
+				
 				}
 			}
 		}
 	}
 
 		return false;
-	
 }
 
 void Tank::checkbulletbounds()
@@ -331,7 +348,6 @@ void Tank::deflect(double dt){
 	m_tankBase.move(deflectVector.x, deflectVector.y);
 	m_turret.move(deflectVector.x, deflectVector.y);
 }
-
 
 void Tank::initSprites()
 {

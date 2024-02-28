@@ -12,6 +12,13 @@
 /// </summary>
 /// 
 
+struct EnemyTankData
+{
+	std::string m_type;
+	sf::Vector2f m_position;
+	double m_rotation;
+};
+
 struct ProjectileData 
 {
 	std::string m_type;
@@ -56,6 +63,7 @@ struct LevelData
 	BackgroundData m_background;
 	TankData m_tank;
 	std::vector<ProjectileData> m_projectiles;
+    std::vector<EnemyTankData> m_enemies_tanks;
 	std::vector<ObstacleData> m_obstacles;
 };
 

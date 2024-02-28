@@ -88,19 +88,30 @@ protected:
 	sf::Font m_arialFont;
 	// main window
 	sf::RenderWindow m_window;
-
-     
-
 	thor::ResourceHolder<sf::Texture, std::string> m_holder;
 
-   Tank m_tank;
+    Tank m_tank;
 
 	sf::Sprite m_bgSprite;
+
 	std::vector<sf::Sprite> m_wallSprites;
 	std::vector<sf::Sprite> m_ProjectileSprites;
+	std::vector<sf::Sprite> m_EnemySprites;
+
 	sf::Text m_timer;
-	float m_time{ 60.0 };
+	sf::Text m_Hits;
+	sf::Text m_Miss;
+	sf::Text m_GameOver;
+
+	sf::Text m_Accuracy;
+	std::stringstream m_AccruacyDigits;
+	std::stringstream m_TimeDigits;
+	
+
+
+	float m_time{ 13.0 };
 	float elapsedTime = 0.0f;
+	bool m_game_over = false;
 
 
 #ifdef TEST_FPS
@@ -112,6 +123,8 @@ protected:
 #endif // TEST_FPS
 private:
 	void generateWalls();
-	void timer();
+	//void setupenemys();
+	void setupText();
 	void updateTimer();
+
 };

@@ -17,10 +17,10 @@ enum class ProjectileStat{NORMAL,COLLIDING};
 
 class Tank
 {
-public:	
-	Tank(thor::ResourceHolder <sf::Texture, std::string> & t_holder,std::vector<sf::Sprite> & t_wallSprites);
+public:
+	Tank(thor::ResourceHolder <sf::Texture, std::string>& t_holder, std::vector<sf::Sprite>& t_wallSprites);
 	void update(double dt);
-	void render(sf::RenderWindow & window);
+	void render(sf::RenderWindow& window);
 	void setPosition(sf::Vector2f t_position);
 	sf::Vector2f getPosition();
 	void setScale(sf::Vector2f t_scale);
@@ -42,6 +42,7 @@ public:
 	bool checkWallCollision();
 	void checkbulletbounds();
 	void deflect(double dt);
+
 
 	double m_speed{ 0.0 };
 	double m_rotation{ 0.0 };
@@ -65,7 +66,14 @@ public:
 
 	int m_hits = 0;
 	int m_misses = 0;
-	
+	int m_Shots = 0;
+
+	float m_accruacy = 0;
+
+	sf::Text m_Accrucity;
+	sf::Font m_arialFont;
+
+	bool m_FireArray[3];
 	
 private:
 	void initSprites();

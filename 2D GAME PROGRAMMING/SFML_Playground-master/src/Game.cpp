@@ -1,7 +1,7 @@
 //by:Alex Bowes 
 #include "Game.h"
 #include <iostream>
-#include <iomanip> // header fo std::Fixed + std::setprecision
+#include <iomanip> // header for std::Fixed + std::setprecision
 	
 
 // Our target FPS
@@ -25,7 +25,8 @@ Game::Game()
 
 	init();
 	generateWalls();
-	timer();
+	setupText();
+	//setupenemys();
 }
 
 ////////////////////////////////////////////////////////////
@@ -53,6 +54,11 @@ void Game::init()
 		}
 	}
 
+	/*for (auto& enemysData : m_level.m_enemies_tanks) {
+		for (auto& enemy : m_EnemySprites) {
+			enemy.setPosition(enemysData.m_position);
+		}
+	}*/
 	
 
 	//m_tankBase.setRotation(90.0f); // rotates it 90 degrees clockwise on its origin 
@@ -88,7 +94,9 @@ void Game::run()
 		{
 			timeSinceLastUpdate -= timePerFrame;
 			processEvents(); // at least 60 fps
-			update(timePerFrame.asMilliseconds()); //60 fps
+			
+				update(timePerFrame.asMilliseconds()); //60 fps
+			
 #ifdef TEST_FPS
 			x_secondTime += timePerFrame;
 			x_updateFrameCount++;
@@ -157,17 +165,33 @@ void Game::generateWalls()
 		sprite.setRotation(obstacle.m_rotation);
 		m_wallSprites.push_back(sprite);
 	}
-
-
 }
 
-void Game::timer()
+void Game::setupText()
 {
 	m_timer.setFont(m_arialFont);
 	m_timer.setCharacterSize(50U);
 	m_timer.setPosition(1150.0f, 25.0f);
 	m_timer.setFillColor(sf::Color::White);
 	m_timer.setString("Time : " + std::to_string(m_time));
+
+	m_Hits.setFont(m_arialFont);
+	m_Hits.setCharacterSize(50U);
+	m_Hits.setPosition(1155.0f, 75.0f);
+	m_Hits.setFillColor(sf::Color::White);
+	m_Hits.setString("Hits : " + std::to_string(m_tank.m_hits));
+
+	m_GameOver.setFont(m_arialFont);
+	m_GameOver.setCharacterSize(100U);
+	m_GameOver.setPosition(400.0f, 350.0f);
+	m_GameOver.setFillColor(sf::Color::White);
+	m_GameOver.setString("GameOver");;
+
+	m_Accuracy.setFont(m_arialFont);
+	m_Accuracy.setCharacterSize(75U);
+	m_Accuracy.setPosition(400.0f, 450.0f);
+	m_Accuracy.setFillColor(sf::Color::White);
+
 }
 
 void Game::updateTimer()
@@ -175,19 +199,61 @@ void Game::updateTimer()
 	float FrameRateMiliseconds = 16.67; //60 fps in miliseconds
 	m_time -= FrameRateMiliseconds / 1000.0; // Convert miliseconds to seconds
 
-	if (m_time < 0) {
+	if (m_time <= 0) {
 		m_time = 0;
+		m_game_over = true;
 	}
-	std::stringstream stream;
-	stream << "Time: " << std::fixed << std::setprecision(2) << m_time;
-	m_timer.setString(stream.str());
+
+	std::stringstream m_TimeDigits;
+	m_TimeDigits << "Time: " << std::fixed << std::setprecision(0) << m_time;
+	m_timer.setString(m_TimeDigits.str());
+
+	if (m_tank.m_Shots > 0 || m_tank.m_Shots > INFINITY) {
+		 m_tank.m_accruacy = (static_cast<float>(m_tank.m_Shots) / m_tank.m_hits) * 100;
+
+		std::stringstream m_AccuracyDigits;
+		m_AccuracyDigits << "Accuracy = " << std::fixed << std::setprecision(0) << m_tank.m_accruacy << " %";
+		m_Accuracy.setString(m_AccuracyDigits.str());
+	}
+	else {
+		m_Accuracy.setString("Accuracy = 0.00%");
+	}
+
+	if (m_tank.m_accruacy > 100) {
+		m_Accuracy.setString("Accuracy = 100.00%");
+	}
 }
+
+
+//void Game::setupenemys()
+//	{
+//		sf::Texture& m_texture6 = m_holder["tankAtlas"];
+//		
+//		//sf::Sprite sprite2;
+//		sf::IntRect enemybase(247, 0, 224, 116);
+//		sf::IntRect enemyturret(279, 114, 213, 96);
+//
+//    for (auto const& enemyData : m_level.m_enemies_tanks) {
+//        sf::Sprite sprite1;
+//		sprite1.setTexture(m_texture6);
+//		sprite1.setTextureRect(enemybase);
+//		sprite1.setOrigin(100.5, 57);
+//		sprite1.setPosition(enemyData.m_position);
+//		sprite1.setRotation(enemyData.m_rotation);
+//		m_EnemySprites.push_back(sprite1);
+//	}
+//}
+
+
 
 ////////////////////////////////////////////////////////////
 void Game::update(double dt)
 {
-	updateTimer();
-	m_tank.update(dt);
+	if (!m_game_over) {
+		m_tank.update(dt);
+		updateTimer();
+		
+	}
 }
 
 ////////////////////////////////////////////////////////////
@@ -202,7 +268,17 @@ void Game::render()
 		m_window.draw(walls);
 	}
 
+	/*for (auto& enemys : m_EnemySprites) {
+		m_window.draw(enemys);
+	}*/
+
 	m_window.draw(m_timer);
+	m_window.draw(m_Hits);
+
+	if (m_game_over) {
+		m_window.draw(m_GameOver);
+		m_window.draw(m_Accuracy);
+	}
 #ifdef TEST_FPS
 	m_window.draw(x_updateFPS);
 	m_window.draw(x_drawFPS);
