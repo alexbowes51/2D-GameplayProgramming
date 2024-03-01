@@ -99,8 +99,8 @@ protected:
 	std::vector<sf::Sprite> m_EnemySprites;
 
 	sf::Text m_timer;
-	sf::Text m_Hits;
 	sf::Text m_Miss;
+	sf::Text m_Shots;
 	sf::Text m_GameOver;
 
 	sf::Text m_Accuracy;
@@ -113,6 +113,10 @@ protected:
 	float elapsedTime = 0.0f;
 	bool m_game_over = false;
 
+	int m_HITS;
+	int m_SHOTS;
+	int m_MISSES;
+
 
 #ifdef TEST_FPS
 	sf::Text x_updateFPS;					// text used to display updates per second.
@@ -123,8 +127,29 @@ protected:
 #endif // TEST_FPS
 private:
 	void generateWalls();
-	//void setupenemys();
+	void setupenemys();
 	void setupText();
 	void updateTimer();
+	void enemyAimingSystem();
 
 };
+
+class Bullet {
+public:
+    Bullet(sf::Vector2f position, float speed, float damage) 
+        : m_position(position), m_speed(speed), m_damage(damage) {}
+
+    void update() {
+        // Update bullet position based on speed and direction
+        m_position += m_velocity;
+    }
+
+    // Other methods and properties as needed...
+
+private:
+    sf::Vector2f m_position;
+    sf::Vector2f m_velocity; // Direction and speed of the bullet
+	float m_speed{ 100 };
+	float m_damage{ 2 };
+};
+

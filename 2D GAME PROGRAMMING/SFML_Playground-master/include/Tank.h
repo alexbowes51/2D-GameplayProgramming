@@ -18,7 +18,7 @@ enum class ProjectileStat{NORMAL,COLLIDING};
 class Tank
 {
 public:
-	Tank(thor::ResourceHolder <sf::Texture, std::string>& t_holder, std::vector<sf::Sprite>& t_wallSprites);
+	Tank(thor::ResourceHolder <sf::Texture, std::string>& t_holder, std::vector<sf::Sprite>& t_wallSprites, std::vector<sf::Sprite>& t_EnemySprites);
 	void update(double dt);
 	void render(sf::RenderWindow& window);
 	void setPosition(sf::Vector2f t_position);
@@ -38,6 +38,7 @@ public:
 
 	void tankAimSystem();
 	void tankShootingSystem();
+	void clicktodrive();
 
 	bool checkWallCollision();
 	void checkbulletbounds();
@@ -50,6 +51,8 @@ public:
 	int direction = 1;
 	bool centreNose = false;
 
+
+
 	double const MAX_REVERSE_SPEED{ -100 };
 	double const MAX_FORWARD_SPEED{ 100 };
 
@@ -57,6 +60,8 @@ public:
 	float NewPos_y{ 0 };
 
 	sf::Vector2f m_BulletVelocity{ 0.0f,0.0f };
+	sf::Vector2f m_TankVelocity{ 0.0f,0.0f };
+	float m_DriveStreering{0};
 
 	LevelData m_level;
 
@@ -64,20 +69,26 @@ public:
 	bool m_Fire = false;
 	bool m_aiming = true;
 
+	bool m_Move = false;
+
 	int m_hits = 0;
 	int m_misses = 0;
-	int m_Shots = 0;
+	int m_shots = 0;
 
 	float m_accruacy = 0;
 
 	sf::Text m_Accrucity;
 	sf::Font m_arialFont;
+	sf::Text m_Hits;
+	sf::Text m_Shot;
+	sf::Text m_Misses;
 
 	bool m_FireArray[3];
 	
 private:
 	void initSprites();
 	void setupbullets();
+	void setupText();
 
 	
 	sf::Sprite m_tankBase;
@@ -85,6 +96,12 @@ private:
 	thor::ResourceHolder<sf::Texture, std::string> & m_holder;
 	std::vector<sf::Sprite>& m_wallSprites;
 	std::vector<sf::Sprite> m_ProjectileSprites;
+	std::vector<sf::Sprite>& m_EnemySprites;
+
+	float FrameRateMiliseconds = 16.67; //60 fps in miliseconds
+	float time = 80.0;
+	
+
 	sf::Vector2f m_contactNormal;
 	TankState m_state{ TankState::NORMAL };
 

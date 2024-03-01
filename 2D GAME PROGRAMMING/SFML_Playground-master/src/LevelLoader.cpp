@@ -13,14 +13,18 @@
 /// 
 /// 
 
-//void operator >> (const YAML::Node& t_enemiesNode, EnemyTankData& t_enemytank)
-//{
-//	t_enemytank.m_type = t_enemiesNode["type"].as<std::string>();
-//	t_enemytank.m_position.x = t_enemiesNode["position"]["x"].as<float>();
-//	t_enemytank.m_position.y = t_enemiesNode["position"]["y"].as<float>();
-//	t_enemytank.m_rotation = t_enemiesNode["rotation"].as<double>();
-//	std::cout << "enemy operater called " << std::endl;
-//}
+void operator >> (const YAML::Node& t_enemies_tanksNode, EnemyData& t_Enemy)
+{
+	t_Enemy.m_type = t_enemies_tanksNode["type"].as<std::string>();
+	t_Enemy.m_position.x = t_enemies_tanksNode["position"]["x"].as<float>();
+	t_Enemy.m_position.y = t_enemies_tanksNode["position"]["y"].as<float>();
+	t_Enemy.m_scale.x = t_enemies_tanksNode["scale"]["x"].as<float>();
+	t_Enemy.m_scale.y = t_enemies_tanksNode["scale"]["y"].as<float>();
+	t_Enemy.m_rotation = t_enemies_tanksNode["rotation"].as<double>();
+
+
+	std::cout << "enemys operater called " << std::endl;
+}
 
 void operator >> (const YAML::Node& t_projectileNode, ProjectileData& t_Projectile)
 {
@@ -104,13 +108,13 @@ void operator >> (const YAML::Node& t_levelNode, LevelData& t_level)
 		t_level.m_projectiles.push_back(projectile);
 	}
 
-	/*const YAML::Node& enemiesNode = t_levelNode["enemies_tanks"].as<YAML::Node>();
-	for (unsigned i = 0; i < enemiesNode.size(); ++i)
+	const YAML::Node& enemiestanksNode = t_levelNode["enemies"].as<YAML::Node>();
+	for (unsigned i = 0; i < enemiestanksNode.size(); ++i)
 	{
-		EnemyTankData enemy;
-		enemiesNode[i] >> enemy;
-		t_level.m_enemies_tanks.push_back(enemy);
-	}*/
+		EnemyData enemytank;
+		enemiestanksNode[i] >> enemytank;
+		t_level.m_enemies.push_back(enemytank);
+	}
 }
 
 ////////////////////////////////////////////////////////////

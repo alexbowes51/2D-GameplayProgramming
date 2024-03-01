@@ -10,7 +10,7 @@ static double const FPS{ 60.0f };
 ////////////////////////////////////////////////////////////
 Game::Game()
 	: m_window(sf::VideoMode(ScreenSize::s_width, ScreenSize::s_height, 32), "SFML Playground", sf::Style::Default)
-	,m_tank(m_holder, m_wallSprites)
+	, m_tank(m_holder, m_wallSprites,m_EnemySprites)
 {
 	int currentLevel = 1;
 
@@ -23,10 +23,11 @@ Game::Game()
 		throw e;
 	}
 
+
 	init();
 	generateWalls();
+	setupenemys();
 	setupText();
-	//setupenemys();
 }
 
 ////////////////////////////////////////////////////////////
@@ -54,11 +55,11 @@ void Game::init()
 		}
 	}
 
-	/*for (auto& enemysData : m_level.m_enemies_tanks) {
-		for (auto& enemy : m_EnemySprites) {
-			enemy.setPosition(enemysData.m_position);
+	for (auto& enemy : m_EnemySprites) {
+		for (auto& enemyData : m_level.m_enemies) {
+			enemy.setPosition(enemyData.m_position);
 		}
-	}*/
+	}
 	
 
 	//m_tankBase.setRotation(90.0f); // rotates it 90 degrees clockwise on its origin 
@@ -170,16 +171,10 @@ void Game::generateWalls()
 void Game::setupText()
 {
 	m_timer.setFont(m_arialFont);
-	m_timer.setCharacterSize(50U);
+	m_timer.setCharacterSize(25U);
 	m_timer.setPosition(1150.0f, 25.0f);
 	m_timer.setFillColor(sf::Color::White);
 	m_timer.setString("Time : " + std::to_string(m_time));
-
-	m_Hits.setFont(m_arialFont);
-	m_Hits.setCharacterSize(50U);
-	m_Hits.setPosition(1155.0f, 75.0f);
-	m_Hits.setFillColor(sf::Color::White);
-	m_Hits.setString("Hits : " + std::to_string(m_tank.m_hits));
 
 	m_GameOver.setFont(m_arialFont);
 	m_GameOver.setCharacterSize(100U);
@@ -199,6 +194,7 @@ void Game::updateTimer()
 	float FrameRateMiliseconds = 16.67; //60 fps in miliseconds
 	m_time -= FrameRateMiliseconds / 1000.0; // Convert miliseconds to seconds
 
+
 	if (m_time <= 0) {
 		m_time = 0;
 		m_game_over = true;
@@ -208,8 +204,8 @@ void Game::updateTimer()
 	m_TimeDigits << "Time: " << std::fixed << std::setprecision(0) << m_time;
 	m_timer.setString(m_TimeDigits.str());
 
-	if (m_tank.m_Shots > 0 || m_tank.m_Shots > INFINITY) {
-		 m_tank.m_accruacy = (static_cast<float>(m_tank.m_Shots) / m_tank.m_hits) * 100;
+	if (m_tank.m_shots > 0) {
+		 m_tank.m_accruacy = (static_cast<float>(m_tank.m_shots) * 100 / m_tank.m_hits);
 
 		std::stringstream m_AccuracyDigits;
 		m_AccuracyDigits << "Accuracy = " << std::fixed << std::setprecision(0) << m_tank.m_accruacy << " %";
@@ -224,26 +220,72 @@ void Game::updateTimer()
 	}
 }
 
+void Game::enemyAimingSystem()
+{
+	sf::Vector2f playerPosition = m_tank.getPosition(); 
 
-//void Game::setupenemys()
-//	{
-//		sf::Texture& m_texture6 = m_holder["tankAtlas"];
-//		
-//		//sf::Sprite sprite2;
-//		sf::IntRect enemybase(247, 0, 224, 116);
-//		sf::IntRect enemyturret(279, 114, 213, 96);
-//
-//    for (auto const& enemyData : m_level.m_enemies_tanks) {
-//        sf::Sprite sprite1;
-//		sprite1.setTexture(m_texture6);
-//		sprite1.setTextureRect(enemybase);
-//		sprite1.setOrigin(100.5, 57);
-//		sprite1.setPosition(enemyData.m_position);
-//		sprite1.setRotation(enemyData.m_rotation);
-//		m_EnemySprites.push_back(sprite1);
-//	}
-//}
+	for(auto& enemyData : m_level.m_enemies){
+		for(auto& enemy : m_EnemySprites){
+			sf::Vector2f direction = playerPosition - enemy.getPosition();
 
+			float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+
+
+			float angleRadians = std::atan2(direction.y, direction.x);
+			float angleDegrees = angleRadians * 180 / 3.14;
+
+			if (enemyData.m_type == "static") {
+				enemy.setRotation(angleDegrees);
+			}
+		}
+	}
+}
+
+
+
+
+void Game::setupenemys()
+	{
+		sf::Texture& m_texture6 = m_holder["tankAtlas"];
+		
+		
+		sf::IntRect enemybase(247, 0, 224, 116);
+		sf::IntRect enemyturret(279, 114, 213, 96);
+
+    for (auto const& enemyData : m_level.m_enemies) {
+		if (enemyData.m_type == "turret") {
+			sf::Sprite sprite1;
+			sprite1.setTexture(m_texture6);
+			sprite1.setTextureRect(enemybase);
+			sprite1.setOrigin(100.5, 57);
+			sprite1.setPosition(enemyData.m_position);
+			sprite1.setRotation(enemyData.m_rotation);
+			sprite1.setScale(enemyData.m_scale);
+			m_EnemySprites.push_back(sprite1);
+
+
+			sf::Sprite sprite2;
+			sprite2.setTexture(m_texture6);
+			sprite2.setTextureRect(enemyturret);
+			sprite2.setOrigin(51, 45);
+			sprite2.setPosition(enemyData.m_position);
+			sprite2.setRotation(enemyData.m_rotation);
+			sprite2.setScale(enemyData.m_scale);
+			m_EnemySprites.push_back(sprite2);
+		}
+		if (enemyData.m_type == "static") {
+			sf::Sprite sprite3;
+			sprite3.setTexture(m_texture6);
+			sprite3.setTextureRect(enemyturret);
+			sprite3.setOrigin(51, 45);
+			sprite3.setPosition(enemyData.m_position);
+			sprite3.setRotation(enemyData.m_rotation);
+			sprite3.setScale(enemyData.m_scale);
+			m_EnemySprites.push_back(sprite3);
+
+		}
+		}
+	}
 
 
 ////////////////////////////////////////////////////////////
@@ -252,7 +294,7 @@ void Game::update(double dt)
 	if (!m_game_over) {
 		m_tank.update(dt);
 		updateTimer();
-		
+		enemyAimingSystem();
 	}
 }
 
@@ -262,22 +304,25 @@ void Game::render()
 	m_window.clear(sf::Color(0, 0, 0, 0));
 	m_window.draw(m_bgSprite);
 	m_tank.render(m_window);
+
 	
 	
 	for (auto& walls : m_wallSprites) {
 		m_window.draw(walls);
 	}
 
-	/*for (auto& enemys : m_EnemySprites) {
+	for (auto& enemys : m_EnemySprites) {
 		m_window.draw(enemys);
-	}*/
+	}
 
 	m_window.draw(m_timer);
-	m_window.draw(m_Hits);
 
 	if (m_game_over) {
 		m_window.draw(m_GameOver);
 		m_window.draw(m_Accuracy);
+		m_tank.m_Shot.setPosition(400,600);
+		m_tank.m_Misses.setPosition(400, 650);
+		m_tank.m_Hits.setPosition(400, 700);
 	}
 #ifdef TEST_FPS
 	m_window.draw(x_updateFPS);

@@ -4,9 +4,10 @@ using namespace MathUtility;
 
 
 Tank::Tank(thor::ResourceHolder<sf::Texture, std::string>& t_holder,
-	std::vector<sf::Sprite>& t_wallSprites)
+	std::vector<sf::Sprite>& t_wallSprites,std::vector<sf::Sprite>& t_EnemySprites)
 	: m_holder(t_holder),
-	  m_wallSprites(t_wallSprites)
+	  m_wallSprites(t_wallSprites),
+	  m_EnemySprites(t_EnemySprites)
 {
 	int currentLevel = 1;
 
@@ -26,10 +27,11 @@ Tank::Tank(thor::ResourceHolder<sf::Texture, std::string>& t_holder,
 
 	initSprites();
 	setupbullets();
+	setupText();
 }
 
 void Tank::update(double dt)
-{	
+{
 	HandleKeyInput();
 	checkbulletbounds();
 
@@ -45,62 +47,74 @@ void Tank::update(double dt)
 		tankShootingSystem();
 	}
 
-	if(m_aiming && m_Fire){
+	if (m_aiming && m_Fire) {
 		for (auto& projectile : m_ProjectileSprites) {
 			projectile.move(m_BulletVelocity);
 		}
 	}
 
 	
-	if (checkWallCollision()){
-		m_state = TankState::COLLIDING;
-	}else{
-		m_state = TankState::NORMAL;
-	}
 
-	switch (m_state) 
-	{
-	case TankState::NORMAL:
-		HandleKeyInput(); // putting the function here checks the input first then clamo the speed and the new x and y
+		if (checkWallCollision()) {
+			m_state = TankState::COLLIDING;
+		}
+		else {
+			m_state = TankState::NORMAL;
+		}
 
-		m_speed = std::clamp(m_speed, MAX_REVERSE_SPEED, MAX_FORWARD_SPEED);
+		switch (m_state)
+		{
+		case TankState::NORMAL:
+			HandleKeyInput(); // putting the function here checks the input first then clamo the speed and the new x and y
 
-		 NewPos_x = m_tankBase.getPosition().x + cos(m_rotation * DEG_TO_RAD) * m_speed * (dt / 1000);
+			m_speed = std::clamp(m_speed, MAX_REVERSE_SPEED, MAX_FORWARD_SPEED);
 
-		 NewPos_y = m_tankBase.getPosition().y + sin(m_rotation * DEG_TO_RAD) * m_speed * (dt / 1000);
+			NewPos_x = m_tankBase.getPosition().x + cos(m_rotation * DEG_TO_RAD) * m_speed * (dt / 1000);
 
-		m_tankBase.setPosition(NewPos_x, NewPos_y);
-		m_turret.setPosition(NewPos_x, NewPos_y);
+			NewPos_y = m_tankBase.getPosition().y + sin(m_rotation * DEG_TO_RAD) * m_speed * (dt / 1000);
 
-		m_tankBase.setRotation(m_rotation);
-
-		if (!m_Fire) {
-			for (auto& projectile : m_ProjectileSprites) {
-				projectile.setPosition(NewPos_x, NewPos_y);
-		
+			if (!m_Move) {
+				m_tankBase.setPosition(NewPos_x, NewPos_y);
+				m_turret.setPosition(NewPos_x, NewPos_y);
+				m_tankBase.setRotation(m_rotation);
+				clicktodrive();
 			}
-		}
+			if (m_Move) {
+				m_tankBase.move(m_TankVelocity);
+				m_turret.move(m_TankVelocity);
+				m_tankBase.setRotation(m_DriveStreering - 10);
+			}
 
-		if (m_speed > 0) {
-			m_speed -= 0.9;
-		}
-		if(m_speed < 0){
-			m_speed += 0.9;
-		}
+			if (!m_Fire) {
+				for (auto& projectile : m_ProjectileSprites) {
+					projectile.setPosition(NewPos_x, NewPos_y);
+
+				}
+			}
+
+			if (m_speed > 0) {
+				m_speed -= 0.9;
+			}
+			if (m_speed < 0) {
+				m_speed += 0.9;
+			}
 
 
-		break;
-	case TankState::COLLIDING:
-		deflect(dt);
-		break; 
+			break;
+		case TankState::COLLIDING:
+			deflect(dt);
+			break;
+		}
 	}
-}
 
 void Tank::render(sf::RenderWindow & window) 
 {
 	window.draw(m_tankBase);
 	window.draw(m_turret);
 	window.draw(m_Accrucity);
+	window.draw(m_Hits);
+	window.draw(m_Shot);
+	window.draw(m_Misses);
 
 	for (auto& projectile : m_ProjectileSprites) {
 		window.draw(projectile);
@@ -199,13 +213,21 @@ void Tank::HandleKeyInput()
 		centreNose = true;
 	}
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-		bool spacebare;
-		spacebare = true;
+		
 		m_Fire = true;
 
-		if (spacebare) {
-			m_Shots = m_Shots + 1;
-			spacebare = false;
+		if (m_Click){
+			m_Click = false;
+		}
+	}
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+
+		bool Click;
+		Click = true;
+
+		if (Click) {
+			m_Move = true;
+			Click = false;
 		}
 	}
 	
@@ -273,13 +295,14 @@ bool Tank::checkWallCollision()
 			if (CollisionDetector::pixelPerfectTest(m_turret, wall)) {
 				// Get contact normal vector between the turret and the wall
 				m_contactNormal = m_turret.getPosition() - wall.getPosition();
-
+				m_Move = false;
 				return true;
 			}
 			else if (CollisionDetector::pixelPerfectTest(m_tankBase, wall))
 			{
 				// Get contact normal vector between tank base and the wall
 				m_contactNormal = m_tankBase.getPosition() - wall.getPosition();
+				m_Move = false;
 				return true;
 			}
 		}
@@ -294,19 +317,40 @@ bool Tank::checkWallCollision()
 				if (CollisionDetector::pixelPerfectTest(projectile, wall)) {
 					bool hit;
 					hit = true;
-
 					if (hit) {
-						m_hits = m_hits + 1;
-						hit = false;
 						m_Fire = false;
+
+						hit = false;
 					}
-	
-				
+					m_shots = m_shots + 1;
+					m_misses = m_misses + 1;
 				}
 			}
 		}
 	}
 
+	for (sf::Sprite const&  enemy: m_EnemySprites) {
+		for (sf::Sprite const& projectile : m_ProjectileSprites) {
+			//collisions for projectiles
+			if (CollisionDetector::collision(projectile, enemy)) {
+				if (CollisionDetector::pixelPerfectTest(projectile, enemy)) {
+					bool hit;
+					hit = true;
+					if (hit) {
+						m_Fire = false;
+
+						hit = false;
+					}
+					m_shots = m_shots + 1;
+					m_hits++;
+					m_hits = m_hits + 1;
+					
+				}
+			}
+		}
+	}
+		m_Hits.setString("Hits : " + std::to_string(m_hits));
+		m_Shot.setString("Shots : " + std::to_string(m_shots));
 		return false;
 }
 
@@ -316,20 +360,26 @@ void Tank::checkbulletbounds()
 		if (projectile.getPosition().x < 0) {
 			m_Fire = false;
 			m_misses = m_misses + 1;
+			m_shots = m_shots + 1;
 		}
-		if (projectile.getPosition().x > 1200) {
+		if (projectile.getPosition().x > 1500) {
 			m_Fire = false;
 			m_misses = m_misses + 1;
+			m_shots = m_shots + 1;
 		}
 		if (projectile.getPosition().y < 0) {
 			m_Fire = false;
 			m_misses = m_misses + 1;
+			m_shots = m_shots + 1;
 		}
 		if (projectile.getPosition().y > 1000) {
 			m_Fire = false;
 			m_misses = m_misses + 1;
+			m_shots = m_shots + 1;
 		}
 	}
+	m_Shot.setString("Shots : " + std::to_string(m_shots));
+	m_Misses.setString("Misses : " + std::to_string(m_misses));
 }
 
 void Tank::deflect(double dt){
@@ -384,6 +434,29 @@ void Tank::setupbullets()
 	}
 }
 
+void Tank::setupText()
+{
+	m_Hits.setFont(m_arialFont);
+	m_Hits.setCharacterSize(25U);
+	m_Hits.setPosition(655.0f, 25.0f);
+	m_Hits.setFillColor(sf::Color::White);
+	m_Hits.setString("Hits : " + std::to_string(m_hits));
+
+	
+	m_Shot.setFont(m_arialFont);
+	m_Shot.setCharacterSize(25U);
+	m_Shot.setPosition(355.0f, 25.0f);
+	m_Shot.setFillColor(sf::Color::White);
+	m_Shot.setString("Shots : " + std::to_string(m_shots));
+
+	
+	m_Misses.setFont(m_arialFont);
+	m_Misses.setCharacterSize(25U);
+	m_Misses.setPosition(955.0f, 25.0f);
+	m_Misses.setFillColor(sf::Color::White);
+	m_Misses.setString("Misses : " + std::to_string(m_misses));
+}
+
 void Tank::tankShootingSystem()
 {
 		for (auto& projectile : m_ProjectileSprites) {
@@ -397,6 +470,35 @@ void Tank::tankShootingSystem()
 				Direction /= length;
 			}
 
+			float AngleRadians = std::atan2(Direction.y, Direction.x);
+			float AngleDegrees = AngleRadians * 180 / 3.14; // Convert radians to degrees
+
+			if (m_Move) {
+				m_turret.setRotation(AngleDegrees);
+			}
+
 			m_BulletVelocity = Direction;
 		}
+}
+
+void Tank::clicktodrive()
+{
+	sf::Vector2i mouseLocation = sf::Mouse::getPosition();
+
+	sf::Vector2f Direction = sf::Vector2f(mouseLocation.x, mouseLocation.y) - m_tankBase.getPosition();
+
+	float length = std::sqrt(Direction.x * Direction.x + Direction.y * Direction.y);
+
+	if (length != 0) {
+		Direction /= length;
+	}
+
+	float AngleRadians = std::atan2(Direction.y, Direction.x);
+	float AngleDegrees = AngleRadians * 180 / 3.14; // Convert radians to degrees
+
+	m_TankVelocity = Direction;
+     
+	m_DriveStreering = AngleDegrees;
+	
+
 }
