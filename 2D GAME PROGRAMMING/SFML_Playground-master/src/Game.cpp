@@ -11,6 +11,7 @@ static double const FPS{ 60.0f };
 Game::Game()
 	: m_window(sf::VideoMode(ScreenSize::s_width, ScreenSize::s_height, 32), "SFML Playground", sf::Style::Default)
 	, m_tank(m_holder, m_wallSprites,m_EnemySprites)
+	,m_aiTank(m_holder["tankAtlas"],m_wallSprites)
 {
 	int currentLevel = 1;
 
@@ -26,8 +27,9 @@ Game::Game()
 
 	init();
 	generateWalls();
-	setupenemys();
+	//setupenemys();
 	setupText();
+	m_aiTank.init(m_level.m_aiTank.m_position, m_level.m_aiTank.m_scale);
 }
 
 ////////////////////////////////////////////////////////////
@@ -55,11 +57,11 @@ void Game::init()
 		}
 	}
 
-	for (auto& enemy : m_EnemySprites) {
+	/*for (auto& enemy : m_EnemySprites) {
 		for (auto& enemyData : m_level.m_enemies) {
 			enemy.setPosition(enemyData.m_position);
 		}
-	}
+	}*/
 	
 
 	//m_tankBase.setRotation(90.0f); // rotates it 90 degrees clockwise on its origin 
@@ -220,72 +222,72 @@ void Game::updateTimer()
 	}
 }
 
-void Game::enemyAimingSystem()
-{
-	sf::Vector2f playerPosition = m_tank.getPosition(); 
-
-	for(auto& enemyData : m_level.m_enemies){
-		for(auto& enemy : m_EnemySprites){
-			sf::Vector2f direction = playerPosition - enemy.getPosition();
-
-			float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
-
-
-			float angleRadians = std::atan2(direction.y, direction.x);
-			float angleDegrees = angleRadians * 180 / 3.14;
-
-			if (enemyData.m_type == "static") {
-				enemy.setRotation(angleDegrees);
-			}
-		}
-	}
-}
-
-
+//void Game::enemyAimingSystem()
+//{
+//	sf::Vector2f playerPosition = m_tank.getPosition(); 
+//
+//	for(auto& enemyData : m_level.m_enemies){
+//		for(auto& enemy : m_EnemySprites){
+//			sf::Vector2f direction = playerPosition - enemy.getPosition();
+//
+//			float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+//
+//
+//			float angleRadians = std::atan2(direction.y, direction.x);
+//			float angleDegrees = angleRadians * 180 / 3.14;
+//
+//			if (enemyData.m_type == "static") {
+//				enemy.setRotation(angleDegrees);
+//			}
+//		}
+//	}
+//}
 
 
-void Game::setupenemys()
-	{
-		sf::Texture& m_texture6 = m_holder["tankAtlas"];
-		
-		
-		sf::IntRect enemybase(247, 0, 224, 116);
-		sf::IntRect enemyturret(279, 114, 213, 96);
-
-    for (auto const& enemyData : m_level.m_enemies) {
-		if (enemyData.m_type == "turret") {
-			sf::Sprite sprite1;
-			sprite1.setTexture(m_texture6);
-			sprite1.setTextureRect(enemybase);
-			sprite1.setOrigin(100.5, 57);
-			sprite1.setPosition(enemyData.m_position);
-			sprite1.setRotation(enemyData.m_rotation);
-			sprite1.setScale(enemyData.m_scale);
-			m_EnemySprites.push_back(sprite1);
 
 
-			sf::Sprite sprite2;
-			sprite2.setTexture(m_texture6);
-			sprite2.setTextureRect(enemyturret);
-			sprite2.setOrigin(51, 45);
-			sprite2.setPosition(enemyData.m_position);
-			sprite2.setRotation(enemyData.m_rotation);
-			sprite2.setScale(enemyData.m_scale);
-			m_EnemySprites.push_back(sprite2);
-		}
-		if (enemyData.m_type == "static") {
-			sf::Sprite sprite3;
-			sprite3.setTexture(m_texture6);
-			sprite3.setTextureRect(enemyturret);
-			sprite3.setOrigin(51, 45);
-			sprite3.setPosition(enemyData.m_position);
-			sprite3.setRotation(enemyData.m_rotation);
-			sprite3.setScale(enemyData.m_scale);
-			m_EnemySprites.push_back(sprite3);
-
-		}
-		}
-	}
+//void Game::setupenemys()
+//	{
+//		sf::Texture& m_texture6 = m_holder["tankAtlas"];
+//		
+//		
+//		sf::IntRect enemybase(247, 0, 224, 116);
+//		sf::IntRect enemyturret(279, 114, 213, 96);
+//
+//    for (auto const& enemyData : m_level.m_enemies) {
+//		if (enemyData.m_type == "turret") {
+//			sf::Sprite sprite1;
+//			sprite1.setTexture(m_texture6);
+//			sprite1.setTextureRect(enemybase);
+//			sprite1.setOrigin(100.5, 57);
+//			sprite1.setPosition(enemyData.m_position);
+//			sprite1.setRotation(enemyData.m_rotation);
+//			sprite1.setScale(enemyData.m_scale);
+//			m_EnemySprites.push_back(sprite1);
+//
+//
+//			sf::Sprite sprite2;
+//			sprite2.setTexture(m_texture6);
+//			sprite2.setTextureRect(enemyturret);
+//			sprite2.setOrigin(51, 45);
+//			sprite2.setPosition(enemyData.m_position);
+//			sprite2.setRotation(enemyData.m_rotation);
+//			sprite2.setScale(enemyData.m_scale);
+//			m_EnemySprites.push_back(sprite2);
+//		}
+//		if (enemyData.m_type == "static") {
+//			sf::Sprite sprite3;
+//			sprite3.setTexture(m_texture6);
+//			sprite3.setTextureRect(enemyturret);
+//			sprite3.setOrigin(51, 45);
+//			sprite3.setPosition(enemyData.m_position);
+//			sprite3.setRotation(enemyData.m_rotation);
+//			sprite3.setScale(enemyData.m_scale);
+//			m_EnemySprites.push_back(sprite3);
+//
+//		}
+//		}
+//	}
 
 
 ////////////////////////////////////////////////////////////
@@ -293,8 +295,9 @@ void Game::update(double dt)
 {
 	if (!m_game_over) {
 		m_tank.update(dt);
-		updateTimer();
-		enemyAimingSystem();
+		m_aiTank.update(m_tank,dt);
+		//updateTimer();
+		//enemyAimingSystem();
 	}
 }
 
@@ -304,6 +307,7 @@ void Game::render()
 	m_window.clear(sf::Color(0, 0, 0, 0));
 	m_window.draw(m_bgSprite);
 	m_tank.render(m_window);
+	m_aiTank.render(m_window);
 
 	
 	
@@ -311,9 +315,9 @@ void Game::render()
 		m_window.draw(walls);
 	}
 
-	for (auto& enemys : m_EnemySprites) {
-		m_window.draw(enemys);
-	}
+	//for (auto& enemys : m_EnemySprites) {
+	//	m_window.draw(enemys);
+	//}
 
 	m_window.draw(m_timer);
 

@@ -11,7 +11,12 @@
 /// 
 /// </summary>
 /// 
-
+struct AITankData {
+	sf::Vector2f m_position;
+	sf::Vector2f m_scale;
+	int m_maxprojectiles;
+	int m_reloadtime;
+};
 
 struct ProjectileData 
 {
@@ -28,15 +33,15 @@ struct ObstacleData
 	double m_rotation;
 };
 
-struct EnemyData
-{
-	std::string m_type;
-	sf::Vector2f m_position;
-	sf::Vector2f m_scale;
-	sf::Vector2f m_offset;
-	bool m_Alive = true;
-	double m_rotation;
-};
+//struct EnemyData
+//{
+//	std::string m_type;
+//	sf::Vector2f m_position;
+//	sf::Vector2f m_scale;
+//	sf::Vector2f m_offset;
+//	bool m_Alive = true;
+//	double m_rotation;
+//};
 /// <summary>
 /// @brief A struct to store Background texture information.
 /// 
@@ -54,6 +59,8 @@ struct TankData
 {
 	sf::Vector2f m_position;
 	sf::Vector2f m_scale;
+	int m_maxprojectiles;
+	int m_reloadtime;
 };
 
 /// <summary>
@@ -65,9 +72,10 @@ struct LevelData
 {
     BackgroundData m_background;
 	TankData m_tank;
+	AITankData m_aiTank;
 	std::vector<ProjectileData> m_projectiles{};
 	std::vector<ObstacleData> m_obstacles{};
-	std::vector<EnemyData> m_enemies{};
+	//std::vector<EnemyData> m_enemies{};
 	
 };
 

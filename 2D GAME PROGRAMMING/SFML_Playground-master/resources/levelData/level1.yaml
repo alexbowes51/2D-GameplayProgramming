@@ -3,31 +3,38 @@ background:
 tank:
    position: {x: 850, y: 100}
    scale: {x: 0.5, y: 0.5}
-enemies:
-   - type: turret
-     position: {x: 500,y: 500, randomOffset: 300}
-     rotation : 0
-     scale: {x: 0.3, y: 0.4}
-   - type: turret
-     position: {x: 800,y: 800, randomOffset: 100}
-     rotation : 0
-     scale: {x: 0.4, y: 0.2}
-   - type: turret
-     position: {x: 400,y: 800, randomOffset: 400}
-     rotation : 0
-     scale: {x: 0.2, y: 0.3}
-   - type: turret
-     position: {x: 200,y: 300, randomOffset: 400}
-     rotation : 0
-     scale: {x: 0.4, y: 0.3}
-   - type: static
-     position: {x: 700,y: 300, randomOffset: 400}
-     rotation : 0
-     scale: {x: 0.4, y: 0.3}
-   - type: static
-     position: {x: 800,y: 300, randomOffset: 400}
-     rotation : 0
-     scale: {x: 0.4, y: 0.3}
+   max_projectiles: 10
+   reload_time: 1000
+ai_tank:
+   position: {x: 400, y: 700}
+   scale: {x: 0.5, y: 0.5}
+   max_projectiles: 10
+   reload_time: 1000
+#enemies:
+#   - type: turret
+#     position: {x: 500,y: 500, randomOffset: 300}
+#     rotation : 0
+#     scale: {x: 0.3, y: 0.4}
+#   - type: turret
+#     position: {x: 800,y: 800, randomOffset: 100}
+#     rotation : 0
+#     scale: {x: 0.4, y: 0.2}
+#   - type: turret
+#     position: {x: 400,y: 800, randomOffset: 400}
+#     rotation : 0
+#     scale: {x: 0.2, y: 0.3}
+#   - type: turret
+#     position: {x: 200,y: 300, randomOffset: 400}
+#     rotation : 0
+#     scale: {x: 0.4, y: 0.3}
+#   - type: static
+#     position: {x: 700,y: 300, randomOffset: 400}
+#     rotation : 0
+#     scale: {x: 0.4, y: 0.3}
+#   - type: static
+#     position: {x: 800,y: 300, randomOffset: 400}
+#     rotation : 0
+#     scale: {x: 0.4, y: 0.3}
 obstacles: 
    - type: wall
      position: {x: 100, y: 660}

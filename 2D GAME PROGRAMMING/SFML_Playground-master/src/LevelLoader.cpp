@@ -13,18 +13,18 @@
 /// 
 /// 
 
-void operator >> (const YAML::Node& t_enemies_tanksNode, EnemyData& t_Enemy)
-{
-	t_Enemy.m_type = t_enemies_tanksNode["type"].as<std::string>();
-	t_Enemy.m_position.x = t_enemies_tanksNode["position"]["x"].as<float>();
-	t_Enemy.m_position.y = t_enemies_tanksNode["position"]["y"].as<float>();
-	t_Enemy.m_scale.x = t_enemies_tanksNode["scale"]["x"].as<float>();
-	t_Enemy.m_scale.y = t_enemies_tanksNode["scale"]["y"].as<float>();
-	t_Enemy.m_rotation = t_enemies_tanksNode["rotation"].as<double>();
-
-
-	std::cout << "enemys operater called " << std::endl;
-}
+//void operator >> (const YAML::Node& t_enemies_tanksNode, EnemyData& t_Enemy)
+//{
+//	t_Enemy.m_type = t_enemies_tanksNode["type"].as<std::string>();
+//	t_Enemy.m_position.x = t_enemies_tanksNode["position"]["x"].as<float>();
+//	t_Enemy.m_position.y = t_enemies_tanksNode["position"]["y"].as<float>();
+//	t_Enemy.m_scale.x = t_enemies_tanksNode["scale"]["x"].as<float>();
+//	t_Enemy.m_scale.y = t_enemies_tanksNode["scale"]["y"].as<float>();
+//	t_Enemy.m_rotation = t_enemies_tanksNode["rotation"].as<double>();
+//
+//
+//	std::cout << "enemys operater called " << std::endl;
+//}
 
 void operator >> (const YAML::Node& t_projectileNode, ProjectileData& t_Projectile)
 {
@@ -74,7 +74,23 @@ void operator >> (const YAML::Node& t_tankNode, TankData& t_tank)
 	t_tank.m_scale.x = t_tankNode["scale"]["x"].as<float>();
 	t_tank.m_scale.y = t_tankNode["scale"]["y"].as<float>();
 
+	t_tank.m_maxprojectiles = t_tankNode["max_projectiles"].as<int>();
+	t_tank.m_reloadtime = t_tankNode["reload_time"].as<int>();
+
 	std::cout << "tank void op called" << std::endl;
+}
+
+void operator >> (const YAML::Node& t_tankNode, AITankData& t_aiTank) {
+	t_aiTank.m_position.x = t_tankNode["position"]["x"].as<float>();
+	t_aiTank.m_position.y = t_tankNode["position"]["y"].as<float>();
+
+	t_aiTank.m_scale.x = t_tankNode["scale"]["x"].as<float>();
+	t_aiTank.m_scale.y = t_tankNode["scale"]["y"].as<float>();
+
+	t_aiTank.m_maxprojectiles = t_tankNode["max_projectiles"].as<int>();
+	t_aiTank.m_reloadtime = t_tankNode["reload_time"].as<int>();
+
+	std::cout << "aitank void op called" << std::endl;
 }
 
 /// <summary>
@@ -92,6 +108,8 @@ void operator >> (const YAML::Node& t_levelNode, LevelData& t_level)
 
 	t_levelNode["tank"] >> t_level.m_tank;// calls the void operator for tank
 
+	t_levelNode["ai_tank"] >> t_level.m_aiTank;
+
 	const YAML::Node& obstaclesNode = t_levelNode["obstacles"].as<YAML::Node>();
 	for (unsigned i = 0; i < obstaclesNode.size(); ++i)
 	{
@@ -108,13 +126,13 @@ void operator >> (const YAML::Node& t_levelNode, LevelData& t_level)
 		t_level.m_projectiles.push_back(projectile);
 	}
 
-	const YAML::Node& enemiestanksNode = t_levelNode["enemies"].as<YAML::Node>();
-	for (unsigned i = 0; i < enemiestanksNode.size(); ++i)
-	{
-		EnemyData enemytank;
-		enemiestanksNode[i] >> enemytank;
-		t_level.m_enemies.push_back(enemytank);
-	}
+	//const YAML::Node& enemiestanksNode = t_levelNode["enemies"].as<YAML::Node>();
+	//for (unsigned i = 0; i < enemiestanksNode.size(); ++i)
+	//{
+	//	EnemyData enemytank;
+	//	enemiestanksNode[i] >> enemytank;
+	//	t_level.m_enemies.push_back(enemytank);
+	//}
 }
 
 ////////////////////////////////////////////////////////////

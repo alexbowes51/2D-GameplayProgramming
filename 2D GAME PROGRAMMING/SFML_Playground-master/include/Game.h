@@ -12,6 +12,7 @@
 #include "ScreenSize.h"
 #include "LevelLoader.h"
 #include "Tank.h"
+#include "AITank.h"
 
 /// <summary>
 /// @author RP
@@ -91,6 +92,7 @@ protected:
 	thor::ResourceHolder<sf::Texture, std::string> m_holder;
 
     Tank m_tank;
+	AITank m_aiTank;
 
 	sf::Sprite m_bgSprite;
 
@@ -127,10 +129,10 @@ protected:
 #endif // TEST_FPS
 private:
 	void generateWalls();
-	void setupenemys();
+	//void setupenemys();
 	void setupText();
 	void updateTimer();
-	void enemyAimingSystem();
+	//void enemyAimingSystem();
 
 };
 
