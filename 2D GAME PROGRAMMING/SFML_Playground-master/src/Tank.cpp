@@ -309,6 +309,21 @@ bool Tank::checkWallCollision()
 
 	}
 
+
+	/*for (sf::Sprite const& projectile : m_ProjectileSprites)
+	{
+		for (sf::Sprite const& wall : m_wallSprites)
+		{
+
+		}
+		for (sf::Sprite const& enemy : m_EnemySprites)
+		{
+
+		}
+
+	}*/
+
+
 	for (sf::Sprite const& wall : m_wallSprites) {
 		for (sf::Sprite const& projectile : m_ProjectileSprites) {
 

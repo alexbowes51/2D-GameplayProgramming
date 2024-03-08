@@ -80,6 +80,10 @@ void AITank::render(sf::RenderWindow & window)
 	// TODO: Don't draw if off-screen...
 	window.draw(m_tankBase);
 	window.draw(m_turret);	
+
+	for (auto& circle : m_obstacles) {
+		window.draw(circle);
+	}
 }
 
 ////////////////////////////////////////////////////////////
@@ -94,6 +98,7 @@ void AITank::init(sf::Vector2f t_position, sf::Vector2f t_scale)
 	{
 		sf::CircleShape circle(wallSprite.getTextureRect().width * 1.5f); 
 		circle.setOrigin(circle.getRadius(), circle.getRadius());
+		circle.setFillColor(sf::Color(255, 255, 255, 125));
 		circle.setPosition(wallSprite.getPosition());
 		m_obstacles.push_back(circle);
 	}
@@ -102,9 +107,9 @@ void AITank::init(sf::Vector2f t_position, sf::Vector2f t_scale)
 ////////////////////////////////////////////////////////////
 sf::Vector2f AITank::seek(sf::Vector2f t_playerPosition) const {
 	
-	//m_steering = t_playerPosition - m_tankBase.getPosition();
 
-	// This return statement is simply a placeholder and must be changed...
+
+   // This return statement is simply a placeholder and must be changed...
 	return sf::Vector2f(0, 1);	
 }
 
@@ -174,7 +179,7 @@ void AITank::updateMovement(double dt)
 {
 	double speed = thor::length(m_velocity);
 	sf::Vector2f newPos(m_tankBase.getPosition().x + std::cos(MathUtility::DEG_TO_RAD  * m_rotation) * speed * (dt / 1000),
-		m_tankBase.getPosition().y + std::sin(MathUtility::DEG_TO_RAD  * m_rotation) * speed * (dt / 1000));
+	m_tankBase.getPosition().y + std::sin(MathUtility::DEG_TO_RAD  * m_rotation) * speed * (dt / 1000));
 	m_tankBase.setPosition(newPos.x, newPos.y);
 	m_tankBase.setRotation(m_rotation);
 	m_turret.setPosition(m_tankBase.getPosition());
