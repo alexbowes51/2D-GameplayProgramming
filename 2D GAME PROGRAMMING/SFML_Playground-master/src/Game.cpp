@@ -309,6 +309,7 @@ void Game::render()
 	m_tank.render(m_window);
 	m_aiTank.render(m_window);
 
+
 	
 	
 	for (auto& walls : m_wallSprites) {

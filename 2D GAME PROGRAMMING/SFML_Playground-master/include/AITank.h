@@ -7,6 +7,7 @@
 #include <queue>
 #include "MathUtility.h"
 
+
 class AITank
 {
 public:
@@ -62,6 +63,8 @@ private:
 	sf::Vector2f collisionAvoidance();
 
 	void findMostThreateningObstacle();
+
+	sf::Vertex m_Forwardline[4];
 
 	// A reference to the sprite sheet texture.
 	sf::Texture const & m_texture;

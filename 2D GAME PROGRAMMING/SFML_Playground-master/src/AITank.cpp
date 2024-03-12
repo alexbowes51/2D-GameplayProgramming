@@ -77,9 +77,13 @@ void AITank::update(Tank m_Tank, double dt)
 ////////////////////////////////////////////////////////////
 void AITank::render(sf::RenderWindow & window)
 {
-	// TODO: Don't draw if off-screen...
+	// TODO: Don't draw if off-screen..
 	window.draw(m_tankBase);
 	window.draw(m_turret);	
+	window.draw(m_Forwardline, 2, sf::Lines);
+	
+ 
+
 
 	for (auto& circle : m_obstacles) {
 		window.draw(circle);
@@ -94,6 +98,13 @@ void AITank::init(sf::Vector2f t_position, sf::Vector2f t_scale)
 	m_turret.setPosition(t_position);
 	m_turret.setScale(t_scale.x, t_scale.y);
 
+	m_Forwardline[0].position = t_position; // Starting point
+	m_Forwardline[0].color = sf::Color::Red;
+	m_Forwardline[1].position = t_position ; // Ending point
+	m_Forwardline[1].position.x += 100;
+	m_Forwardline[1].color = sf::Color::Red;
+	//this is for the red line is made up of 2 vertexs
+
 	for (sf::Sprite const wallSprite : m_wallSprites)
 	{
 		sf::CircleShape circle(wallSprite.getTextureRect().width * 1.5f); 
@@ -106,11 +117,8 @@ void AITank::init(sf::Vector2f t_position, sf::Vector2f t_scale)
 
 ////////////////////////////////////////////////////////////
 sf::Vector2f AITank::seek(sf::Vector2f t_playerPosition) const {
-	
-
-
    // This return statement is simply a placeholder and must be changed...
-	return sf::Vector2f(0, 1);	
+	return t_playerPosition - m_tankBase.getPosition();
 }
 
 ////////////////////////////////////////////////////////////
@@ -156,7 +164,7 @@ void AITank::initSprites()
 	// Gun_01_Brown,279, 114, 213, 96
 
 	//sf::IntRect enemybase(247, 0, 224, 116);
-    //sf::IntRect enemyturret(279, 114, 213, 96);
+    //sf::IntRect enemyturret(279, 114, 213, 96); // for my tank sprite sheet
 
 	sf::IntRect brownTankRect(247, 0, 224, 116);
 	m_tankBase.setTexture(m_texture);
@@ -181,6 +189,8 @@ void AITank::updateMovement(double dt)
 	sf::Vector2f newPos(m_tankBase.getPosition().x + std::cos(MathUtility::DEG_TO_RAD  * m_rotation) * speed * (dt / 1000),
 	m_tankBase.getPosition().y + std::sin(MathUtility::DEG_TO_RAD  * m_rotation) * speed * (dt / 1000));
 	m_tankBase.setPosition(newPos.x, newPos.y);
+	m_Forwardline[0].position = newPos;
+	m_Forwardline[1].position = newPos + m_velocity * 2.5f;
 	m_tankBase.setRotation(m_rotation);
 	m_turret.setPosition(m_tankBase.getPosition());
 	m_turret.setRotation(m_rotation);
