@@ -115,10 +115,12 @@ void Tank::render(sf::RenderWindow & window)
 	window.draw(m_Hits);
 	window.draw(m_Shot);
 	window.draw(m_Misses);
+	auto spritePos = m_bullet.getPosition();
+	m_pool.render(window);
 
-	for (auto& projectile : m_ProjectileSprites) {
-		window.draw(projectile);
-	}
+	//for (auto& projectile : m_ProjectileSprites) {
+	//	window.draw(projectile);
+	//}
 }
 
 void Tank::setPosition(sf::Vector2f t_position)
@@ -212,24 +214,29 @@ void Tank::HandleKeyInput()
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
 		centreNose = true;
 	}
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-		
-		m_Fire = true;
-
-		if (m_Click){
-			m_Click = false;
-		}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+		requestFire();
 	}
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
 
-		bool Click;
-		Click = true;
+	//m_pool.update(dt, m_wallSprites);
+	//if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+	//	
+	//	m_Fire = true;
 
-		if (Click) {
-			m_Move = true;
-			Click = false;
-		}
-	}
+	//	if (m_Click){
+	//		m_Click = false;
+	//	}
+	//}
+	//if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+
+	//	bool Click;
+	//	Click = true;
+
+	//	if (Click) {
+	//		m_Move = true;
+	//		Click = false;
+	//	}
+	//}
 	
 }
 
@@ -324,49 +331,46 @@ bool Tank::checkWallCollision()
 	}*/
 
 
-	for (sf::Sprite const& wall : m_wallSprites) {
-		for (sf::Sprite const& projectile : m_ProjectileSprites) {
+	//for (sf::Sprite const& wall : m_wallSprites) {
+	//	for (sf::Sprite const& projectile : m_ProjectileSprites) {
 
-			//collisions for projectiles
-			if (CollisionDetector::collision(projectile, wall)) {
-				if (CollisionDetector::pixelPerfectTest(projectile, wall)) {
-					bool hit;
-					hit = true;
-					if (hit) {
-						m_Fire = false;
+	//		//collisions for projectiles
+	//		if (CollisionDetector::collision(projectile, wall)) {
+	//			if (CollisionDetector::pixelPerfectTest(projectile, wall)) {
+	//				bool hit;
+	//				hit = true;
+	//				if (hit) {
+	//					m_Fire = false;
 
-						hit = false;
-					}
-					m_shots = m_shots + 1;
-					m_misses = m_misses + 1;
-				}
-			}
-		}
-	}
+	//					hit = false;
+	//				}
+	//				m_shots = m_shots + 1;
+	//				m_misses = m_misses + 1;
+	//			}
+	//		}
+	//	}
+	//}
 
-	for (sf::Sprite const&  enemy: m_EnemySprites) {
-		for (sf::Sprite const& projectile : m_ProjectileSprites) {
-			//collisions for projectiles
-			if (CollisionDetector::collision(projectile, enemy)) {
-				if (CollisionDetector::pixelPerfectTest(projectile, enemy)) {
-					bool hit;
-					hit = true;
-					if (hit) {
-						m_Fire = false;
+	//for (sf::Sprite const&  enemy: m_EnemySprites) {
+	//	for (sf::Sprite const& projectile : m_ProjectileSprites) {
+	//		//collisions for projectiles
+	//		if (CollisionDetector::collision(projectile, enemy)) {
+	//			if (CollisionDetector::pixelPerfectTest(projectile, enemy)) {
+	//				bool hit;
+	//				hit = true;
+	//				if (hit) {
+	//					m_Fire = false;
 
-						hit = false;
-					}
-					m_shots = m_shots + 1;
-					m_hits++;
-					m_hits = m_hits + 1;
-					
-				}
-			}
-		}
-	}
-		m_Hits.setString("Hits : " + std::to_string(m_hits));
-		m_Shot.setString("Shots : " + std::to_string(m_shots));
-		return false;
+	//					hit = false;
+	//				}
+	//				m_shots = m_shots + 1;
+	//				m_hits++;
+	//				m_hits = m_hits + 1;
+	//				
+	//			}
+	//		}
+	//	}
+	//}
 }
 
 void Tank::checkbulletbounds()
@@ -412,6 +416,21 @@ void Tank::deflect(double dt){
 
 	m_tankBase.move(deflectVector.x, deflectVector.y);
 	m_turret.move(deflectVector.x, deflectVector.y);
+}
+
+void Tank::requestFire()
+{
+	std::cout << "shoot" << std::endl;
+	m_fireRequested = true;
+	if (m_shootTimer == s_TIME_BETWEEN_SHOTS) {
+		sf::Vector2f tipOfturret(m_turret.getPosition().x, m_turret.getPosition().y);
+		tipOfturret.x += std::cos(MathUtility::DEG_TO_RAD * m_turret.getRotation()) *
+			((m_turret.getLocalBounds().top + m_turret.getLocalBounds().height));
+		tipOfturret.y += std::sin(MathUtility::DEG_TO_RAD * m_turret.getRotation()) *
+			((m_turret.getLocalBounds().top + m_turret.getLocalBounds().height));
+		m_pool.create(m_holder["tankAtlas"], tipOfturret.x, tipOfturret.y, m_turret.getRotation());
+	}
+
 }
 
 void Tank::initSprites()

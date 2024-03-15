@@ -13,6 +13,7 @@
 #include "LevelLoader.h"
 #include "Tank.h"
 #include "AITank.h"
+#include "ProjectilePool.h"
 
 /// <summary>
 /// @author RP
@@ -84,6 +85,7 @@ protected:
 
 	//loads the game level data 
 	LevelData m_level;
+	ProjectilePool m_pool;
 	 
 	// Font used for all text
 	sf::Font m_arialFont;

@@ -4,6 +4,7 @@
 #include "MathUtility.h"
 #include "CollisionDetector.h"
 #include "LevelLoader.h"
+#include <ProjectilePool.h>
 
 /// <summary>
 /// @brief A simple tank controller.
@@ -44,6 +45,11 @@ public:
 	void checkbulletbounds();
 	void deflect(double dt);
 
+	void requestFire();
+	bool m_fireRequested = false;
+	int m_shootTimer = 800;
+	static int const s_TIME_BETWEEN_SHOTS{ 800 };
+
 
 	double m_speed{ 0.0 };
 	double m_rotation{ 0.0 };
@@ -64,6 +70,7 @@ public:
 	float m_DriveStreering{0};
 
 	LevelData m_level;
+	ProjectilePool m_pool;
 
 	bool m_Click = false;
 	bool m_Fire = false;
@@ -93,6 +100,7 @@ private:
 	
 	sf::Sprite m_tankBase;
 	sf::Sprite m_turret;
+	sf::Sprite m_bullet;
 	thor::ResourceHolder<sf::Texture, std::string> & m_holder;
 	std::vector<sf::Sprite>& m_wallSprites;
 	std::vector<sf::Sprite> m_ProjectileSprites;

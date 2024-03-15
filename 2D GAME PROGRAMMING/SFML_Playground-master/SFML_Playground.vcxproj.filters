@@ -39,6 +39,12 @@
     <ClInclude Include="include\AITank.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\ProjectilePool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Projectile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp">
@@ -63,6 +69,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\AITank.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Projectile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProjectilePool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

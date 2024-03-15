@@ -1,40 +1,70 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <Thor/Resources.hpp>
+#include "ScreenSize.h"
 #include "MathUtility.h"
 #include "CollisionDetector.h"
-#include "LevelLoader.h"
-#include "Tank.h"
 
+/// <summary>
+/// @brief A basic projectile implementation.
+/// 
+/// Handles initialisation and updating of projectiles.
+/// </summary>
+class Projectile
+{
+	// Allows the ProjectilePool direct access to the private members of Projectile.
+	// This is so the ProjectilePool can access the Projectile sprite representation so it
+	// can be rendered.
+	friend class ProjectilePool;
 
-
-enum class ProjectileState { NORMAL, COLLIDING };
-
-class Projectile {
 public:
-	Projectile(thor::ResourceHolder <sf::Texture, std::string>& t_holder, std::vector<sf::Sprite>& t_projectileSprites);
-	void update(double dt);
-	void render(sf::RenderWindow& window);
-	void setPosition(sf::Vector2f t_position);
-	sf::Vector2f getPosition();
-	void setScale(sf::Vector2f t_scale);
+	/// <summary>
+	/// @brief No-op default constructor
+	/// </summary>
+	Projectile() = default;
 
-	bool checkWallCollision();
+	/// <summary>
+	/// @brief Initialises various properties of the projectile.
+	/// The projectile speed is set to it's maximum allowable speed.
+	/// </summary>
+	/// <param name="t_texture">A reference to the sprite sheet texture</param>	
+	/// <param name="t_x">The x position of the projectile</param>
+	/// <param name="t_y">The y position of the projectile</param>
+	/// <param name="t_rotation">The rotation angle of the projectile in degrees</param>
+	void init(sf::Texture const & t_texture, double t_x, double t_y, double t_rotation);
 
-
-	LevelData m_level;
-
-
-	double m_speed{ 0.0 };
-
-	float NewPos_x{ 0 };
-	float NewPos_y{ 0 };
-
+	/// <summary>
+	/// @brief Calculates the new position of the projectile.
+	/// If this projectile is currently in use (on screen, speed non-zero), it's next screen position
+	///  is calculated along a vector that extends directly from the tip of the tank turret.
+	/// If the newly calculated position is off-screen, then the projectile speed is reset to 0.
+	/// Otherwise (projectile still on-screen), a collision check is performed between the projectile
+	///  and every wall. If the projectile collides with a wall, it's speed is reset to 0.
+	/// </summary>
+	/// <param name="dt">The delta time</param>
+	/// <param name="wallSprites">A reference to the container of wall sprites</param>
+	/// <returns>True if this projectile is currently not in use (i.e. speed is zero).</returns>
+	bool update(double t_dt, std::vector<sf::Sprite> & t_wallSprites);
+	
+	/// <summary>
+	/// @brief Simpler helper function to determine if projectile is currently in use.
+	/// </summary>
+	/// <returns>True if this projectile is currently in use (i.e. speed is non zero).</returns>
+	bool inUse() const;
 
 private:
-	thor::ResourceHolder<sf::Texture, std::string>& m_holder;
-	std::vector<sf::Sprite> m_ProjectileSprites;
-	sf::Vector2f m_contactNormal;
-	ProjectileState m_state{ ProjectileState::NORMAL };
-	void setupbullets();
+	
+	bool isOnScreen(sf::Vector2f t_position) const;
+
+	// Max. update speed 
+	static constexpr double s_MAX_SPEED { 1000.0 };
+
+	// Movement speed.
+	double m_speed { 0 };
+
+	// A sprite for the projectile.
+	sf::Sprite m_projectile;
+
+	// The bounding rectangle for this projectile.
+	sf::IntRect m_projectileRect { 254, 116, 24, 10 };
+
 };
